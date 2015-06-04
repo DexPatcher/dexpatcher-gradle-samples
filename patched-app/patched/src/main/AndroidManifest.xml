@@ -1,0 +1,17 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="hack.getid">
+
+    <!--Source and patched manifests are merged according to standard android gradle build rules.-->
+
+    <!--We let the application tag inherit its attributes from the source app.-->
+    <application>
+        <!--This activity is required by the file chooser we imported:
+            https://github.com/bartwell/ExFilePicker#usage -->
+        <activity
+            android:name="ru.bartwell.exfilepicker.ExFilePickerActivity"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/ExFilePickerThemeDark" />
+    </application>
+    <!--We add this permission to let the file chooser poke around storage.-->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+</manifest>

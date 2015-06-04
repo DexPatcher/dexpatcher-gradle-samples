@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+<!--
+    Could we sort of convert the app to material design just by uncommenting this?
+    <style name="AppTheme" parent="android:Theme.Material.Light" />
+-->
+
+</resources>
