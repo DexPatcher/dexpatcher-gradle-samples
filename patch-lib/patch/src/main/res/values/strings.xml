@@ -1,0 +1,9 @@
+<resources>
+
+    <!--Source and patch resources are merged according to standard build rules:
+        http://tools.android.com/tech-docs/new-build-system/resource-merging -->
+
+    <!--Override app name.-->
+    <string name="app_name">Get ID (patch-lib)</string>
+
+</resources>

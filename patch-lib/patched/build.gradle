@@ -59,21 +59,6 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
-    // To produce a patched application we need to import an apk library created from the
-    // app we want to modify. In this case we import the artifact produced by the 'source'
-    // subproject. But the library could be produced by an independent project and imported
-    // manually in Android Studio just like any other android library (aar) file.
-    compile project(':source')
-
-    // We import an Android library, a file chooser, just for fun. This pulls in all its
-    // resources that will be transparently merged, like other resources from this project,
-    // with those of the source app. Each component will have its own independent 'R' class.
-    // The numeric IDs of the resources coming from the source app will be kept constant.
-    compile('ru.bartwell:exfilepicker:1.8') {
-        // But the imported library has a transitive dependency on a module that is already
-        // present in the source app. So we exclude it from the import, keeping the source
-        // app's version. Alternatively we could delete the copy brought in by the source
-        // app using DexPatcher package annotations.
-        exclude module: 'support-v4'
-    }
+    // Bring in the patch and its dependencies, including the source apk library.
+    compile project(':patch')
 }

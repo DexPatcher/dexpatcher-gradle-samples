@@ -1,10 +1,11 @@
 // DexPatcher Patched Application plugin:
 
-apply plugin: 'com.github.lanchon.dexpatcher.patched-application'
+apply plugin: 'com.github.lanchon.dexpatcher.patch-library'
 
-// The DexPatcher Patched Application plugin produces a modified Android application
-// by applying changes and additions to code and resources of a source application
-// imported as a DexPatcher APK library.
+// The DexPatcher Patch Library plugin produces a DexPatcher patch library file that
+// bundles compiled changes and additions to code and resources of a source application
+// imported as a DexPatcher APK library, without bundling any part of the source
+// application itself.
 
 // General Plugin Configuration
 dexpatcherConfig {
@@ -16,18 +17,9 @@ dexpatcherConfig {
     //dir = '~/android/dexpatcher/dexpatcher-gradle-tools'
 
     // Specific Plugin Configuration
-    patchedApplication {
-        // Set to false to bypass DexPatcher and only patch resources.
+    patchLibrary {
+        // Set to false to disable code processing and only process resources.
         //patchCode = false
-    }
-
-    // Per-Tool Defaults
-    dexpatcher {
-        // This should be set if patching code for api level less than 14.
-        //apiLevel = 14
-
-        // Set to QUIET, NORMAL, VERBOSE or DEBUG. Default is NORMAL, VERBOSE is recommended.
-        verbosity = VERBOSE
     }
 }
 
@@ -36,11 +28,6 @@ android {
     buildToolsVersion '22.0.1'
 
     defaultConfig {
-        // The 'package' attribute in the patched app manifest must be different from the
-        // source app ID to support class generation (R and BuildConfig), but here you can
-        // override the exported patched app ID to match the source.
-        applicationId 'makeinfo.com.getid.apk'
-
         // You must set these fields to match or be compatible with the corresponding source
         // fields. It is recommended to increase 'minSdkVersion' to at least 14 if necessary.
         minSdkVersion 14

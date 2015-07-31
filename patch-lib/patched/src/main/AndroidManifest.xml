@@ -18,16 +18,6 @@
             </intent-filter>
         </activity>
 
-        <!--This activity is required by the file chooser we imported:
-            https://github.com/bartwell/ExFilePicker#usage -->
-        <activity
-            android:name="ru.bartwell.exfilepicker.ExFilePickerActivity"
-            android:configChanges="orientation|screenSize"
-            android:theme="@style/ExFilePickerThemeDark" />
-
     </application>
-
-    <!--We add this permission to let the file chooser poke around storage.-->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
 </manifest>
