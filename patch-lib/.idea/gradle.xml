@@ -14,6 +14,14 @@
             <option value="$PROJECT_DIR$/source" />
           </set>
         </option>
+        <option name="myModules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/patch" />
+            <option value="$PROJECT_DIR$/patched" />
+            <option value="$PROJECT_DIR$/source" />
+          </set>
+        </option>
       </GradleProjectSettings>
     </option>
   </component>
