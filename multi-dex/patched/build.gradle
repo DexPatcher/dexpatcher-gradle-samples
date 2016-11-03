@@ -1,0 +1,142 @@
+// DexPatcher Patched Application plugin:
+
+apply plugin: 'com.github.lanchon.dexpatcher.patched-application'
+
+// The DexPatcher Patched Application plugin produces a modified Android application
+// by applying changes and additions to code and resources of a source application
+// imported as a DexPatcher APK library.
+
+// General Plugin Configuration
+dexpatcherConfig {
+    // This should point to a local clone of the DexPatcher Gradle plugin support tool
+    // repo that is available here: https://github.com/Lanchon/DexPatcher-gradle-tools
+    // But instead of defining the directory here, add a 'dexpatcher.dir' entry to the
+    // 'local.properties' of the root project. That way it becomes available to all
+    // subprojects and the local configuration is not posted to the VCS.
+    //dir = '~/android/dexpatcher/dexpatcher-gradle-tools'
+
+    // Specific Plugin Configuration
+    patchedApplication {
+        // Set to false to bypass DexPatcher and only patch resources.
+        //patchCode = false
+    }
+
+    // Per-Tool Defaults
+    dexpatcher {
+
+        // *** MULTI-DEX TEST ***
+        //
+        // Note that DexPatcher multi-dex patched apps require an Android 5.0 device or
+        // newer to run. This is why the 'minSdkVersion' setting in the android section
+        // below was bumped to 21.
+        //
+        // In this test we patch a multi-dex source app created by artificially limiting
+        // the maximum number of method references per dex file. It was created using
+        // DexPatcher tool's '--max-dex-pool-size' option.
+        //
+        // The source project's 'apk-library' plugin is always multi-dex enabled.
+        // Multi-dex must be manually enabled in the 'patched-application' plugin:
+        multiDex = true
+        // Multi-dex need not be enabled in the Android build system unless the patch
+        // dex itself requires it. The sizes of the source app and complete patched app are
+        // not important.
+        //
+        // In this test we also limit the number of methods per dex file in the patched app:
+        maxDexPoolSize = 5000
+        // This forces it to become multi-dex for testing purposes.
+        //
+        // And finally we enable very verbose logging:
+        verbosity = DEBUG
+        // This will show multi-dex I/O in action.
+
+        // The Android api level of dex files. The api level is auto-detected by DexPatcher
+        // v1.2.0 and later, so this setting is no longer needed for normal operation.
+        //apiLevel = 14
+
+        // Enable multi-dex support.
+        //multiDex = true
+
+        // Enable multi-dex support in multi-threaded mode. It is faster, but produces more
+        // dex files than the bare minimum required by the contents of the patched app.
+        // Recommended for debug builds but not for releases.
+        //multiDexThreaded = true
+
+        // Enable multi-dex support in multi-threaded mode with the specified number of
+        // simultaneous processes. Defaults to the number of available processors up to 4.
+        //multiDexJobs = 8
+
+        // The maximum number of items in the pools of the output dex files. This limits,
+        // for example, the number of method references in each dex file. Defaults to 65536.
+        //maxDexPoolSize = 65536
+
+        // The package name of the used DexPatcher annotations. Useful to handle rogue apps
+        // that want to disallow patching by intentionally clashing with standard DexPatcher
+        // annotation names. Defaults to 'lanchon.dexpatcher.annotation'.
+        //annotationPackage = 'lanchon.dexpatcher.annotation'
+
+        // Enable compatibility with the deprecated DexTag.
+        //compatDexTag = true
+
+        // The verbosity of the DexPatcher tool. One of QUIET, NORMAL, VERBOSE or DEBUG.
+        // Defaults to NORMAL, but VERBOSE is recommended.
+        //verbosity = VERBOSE
+
+        // Enable logging of relative paths of source files instead of just their filename.
+        //logSourcePath = true
+
+        // Enable logging of paths of source files prepending the specified root.
+        //logSourcePathRoot = file('src/main/java')
+
+        // Enable logging of timing statistics.
+        //logStats
+    }
+}
+
+android {
+    compileSdkVersion 22
+    buildToolsVersion '22.0.1'
+
+    defaultConfig {
+        // The 'package' attribute in the patched app manifest must be different from the
+        // source app ID to support class generation (R and BuildConfig), but here you can
+        // override the exported patched app ID to match the source.
+        applicationId 'makeinfo.com.getid.apk'
+
+        // You must set these fields to match or be compatible with the corresponding source
+        // fields. It is recommended to increase 'minSdkVersion' to at least 14 if necessary.
+        //minSdkVersion 14
+        // NOTE: DexPatcher multi-dex patched apps require Android 5.0 (API 21) or newer.
+        minSdkVersion 21
+        targetSdkVersion 21
+        versionCode 1
+        versionName '1.0'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    // To produce a patched application we need to import an apk library created from the
+    // app we want to modify. In this case we import the artifact produced by the 'source'
+    // subproject. But the library could be produced by an independent project and imported
+    // manually in Android Studio just like any other android library (aar) file.
+    compile project(':source')
+
+    // We import an Android library, a file chooser, just for fun. This pulls in all its
+    // resources that will be transparently merged, like other resources from this project,
+    // with those of the source app. Each component will have its own independent 'R' class.
+    // The numeric IDs of the resources coming from the source app will be kept constant.
+    compile('ru.bartwell:exfilepicker:1.8') {
+        // But the imported library has a transitive dependency on a module that is already
+        // present in the source app. So we exclude it from the import, keeping the source
+        // app's version. Alternatively we could delete the copy brought in by the source
+        // app using DexPatcher package annotations.
+        exclude module: 'support-v4'
+    }
+}
