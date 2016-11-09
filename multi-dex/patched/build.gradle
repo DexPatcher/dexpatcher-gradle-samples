@@ -17,8 +17,15 @@ dexpatcherConfig {
 
     // Specific Plugin Configuration
     patchedApplication {
-        // Set to false to bypass DexPatcher and only patch resources.
-        //patchCode = false
+        // Speed up debug builds by enabling multi-threaded multi-dex processing for them,
+        // but only if multi-dex mode is already enabled for them. Defaults to true.
+        //multiDexThreadedForMultiDexDebugBuilds = true
+
+        // Speed up debug builds by enabling multi-threaded multi-dex processing for them,
+        // even if multi-dex mode is not already enabled for them. Note that apps patched
+        // in multi-dex mode are only compatible with devices running Android 5.0 (API 21)
+        // and later. Defaults to false.
+        //multiDexThreadedForAllDebugBuilds = true
     }
 
     // Per-Tool Defaults
@@ -42,27 +49,31 @@ dexpatcherConfig {
         // not important.
         //
         // In this test we also limit the number of methods per dex file in the patched app:
-        maxDexPoolSize = 5000
+        maxDexPoolSize = 10000
         // This forces it to become multi-dex for testing purposes.
         //
         // And finally we enable very verbose logging:
         verbosity = DEBUG
+        logStats = true
         // This will show multi-dex I/O in action.
 
         // The Android api level of dex files. The api level is auto-detected by DexPatcher
         // v1.2.0 and later, so this setting is no longer needed for normal operation.
         //apiLevel = 14
 
-        // Enable multi-dex support.
+        // Enable multi-dex support. Note that DexPatcher only supports native multi-dex as
+        // implemented in ART and does not support legacy multi-dex for Dalvik VM. Patched
+        // multi-dex apps are only compatible with Android 5.0 (API 21) and later devices.
         //multiDex = true
 
-        // Enable multi-dex support in multi-threaded mode. It is faster, but produces more
-        // dex files than the bare minimum required by the contents of the patched app.
-        // Recommended for debug builds but not for releases.
+        // Enable multi-threaded multi-dex processing, if multi-dex mode is already enabled.
+        // Multi-threaded processing is faster but produces more dex files than the bare
+        // minimum required by the contents of the patched app. This is recommended for
+        // debug builds but not for releases.
         //multiDexThreaded = true
 
-        // Enable multi-dex support in multi-threaded mode with the specified number of
-        // simultaneous processes. Defaults to the number of available processors up to 4.
+        // Set the number of multi-dex processing threads, if multi-threaded multi-dex mode
+        // is already enabled. Defaults to the number of available processors up to 4.
         //multiDexJobs = 8
 
         // The maximum number of items in the pools of the output dex files. This limits,
@@ -88,24 +99,24 @@ dexpatcherConfig {
         //logSourcePathRoot = file('src/main/java')
 
         // Enable logging of timing statistics.
-        //logStats
+        //logStats = true
     }
 }
 
 android {
-    compileSdkVersion 22
-    buildToolsVersion '22.0.1'
+    compileSdkVersion 21
+    buildToolsVersion '21.1.2'
 
     defaultConfig {
         // The 'package' attribute in the patched app manifest must be different from the
         // source app ID to support class generation (R and BuildConfig), but here you can
         // override the exported patched app ID to match the source.
-        applicationId 'makeinfo.com.getid.apk'
+        applicationId 'makeinfo.com.getid'
 
-        // You must set these fields to match or be compatible with the corresponding source
-        // fields. It is recommended to increase 'minSdkVersion' to at least 14 if necessary.
-        //minSdkVersion 14
-        // NOTE: DexPatcher multi-dex patched apps require Android 5.0 (API 21) or newer.
+        // You must set these fields to match or be compatible with the corresponding data
+        // of the source app. (Data is displayed when the source apk library is built.)
+        //minSdkVersion 9
+        // NOTE: DexPatcher multi-dex patched apps require Android 5.0 (API 21) or later.
         minSdkVersion 21
         targetSdkVersion 21
         versionCode 1
@@ -117,6 +128,10 @@ android {
             minifyEnabled false
         }
     }
+}
+
+tasks.withType(com.android.build.gradle.tasks.Lint) {
+    enabled = false
 }
 
 dependencies {

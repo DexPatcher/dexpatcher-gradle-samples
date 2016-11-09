@@ -18,19 +18,17 @@ dexpatcherConfig {
 
     // Specific Plugin Configuration
     patchLibrary {
-        // Set to false to disable code processing and only process resources.
-        //patchCode = false
     }
 }
 
 android {
-    compileSdkVersion 22
-    buildToolsVersion '22.0.1'
+    compileSdkVersion 21
+    buildToolsVersion '21.1.2'
 
     defaultConfig {
-        // You must set these fields to match or be compatible with the corresponding source
-        // fields. It is recommended to increase 'minSdkVersion' to at least 14 if necessary.
-        minSdkVersion 14
+        // You must set these fields to match or be compatible with the corresponding data
+        // of the source app. (Data is displayed when the source apk library is built.)
+        minSdkVersion 9
         targetSdkVersion 21
         versionCode 1
         versionName '1.0'
@@ -41,6 +39,10 @@ android {
             minifyEnabled false
         }
     }
+}
+
+tasks.withType(com.android.build.gradle.tasks.Lint) {
+    enabled = false
 }
 
 dependencies {
