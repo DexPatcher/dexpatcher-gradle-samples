@@ -102,8 +102,8 @@
     </content>
     <orderEntry type="jdk" jdkName="Android API 21 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" exported="" name="dexpatcher-annotation-1.2.0" level="project" />
     <orderEntry type="library" exported="" name="classes" level="project" />
-    <orderEntry type="library" exported="" name="dexpatcher-annotation-1.2.0-beta1" level="project" />
     <orderEntry type="library" exported="" name="exfilepicker-1.8" level="project" />
     <orderEntry type="module" module-name="source" exported="" />
     <orderEntry type="module" module-name="patch" exported="" />
