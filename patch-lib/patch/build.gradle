@@ -23,7 +23,7 @@ dexpatcherConfig {
 
 android {
     compileSdkVersion 21
-    buildToolsVersion '21.1.2'
+    buildToolsVersion '23.0.3'
 
     defaultConfig {
         // You must set these fields to match or be compatible with the corresponding data

@@ -78,7 +78,7 @@ dexpatcherConfig {
 
 android {
     compileSdkVersion 21
-    buildToolsVersion '21.1.2'
+    buildToolsVersion '23.0.3'
 
     defaultConfig {
         // The 'package' attribute in the patched app manifest must be different from the
