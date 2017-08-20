@@ -13,6 +13,7 @@ import android.widget.Toast;
 import lanchon.dexpatcher.annotation.DexAdd;
 import lanchon.dexpatcher.annotation.DexEdit;
 import lanchon.dexpatcher.annotation.DexIgnore;
+import lanchon.dexpatcher.annotation.DexWrap;
 import ru.bartwell.exfilepicker.ExFilePickerActivity;
 
 @DexEdit
@@ -39,15 +40,11 @@ public class MainActivity extends ActionBarActivity {
     @DexIgnore
     public MainActivity() { throw null; }
 
-    // Rename the existing onCreate method.
-    @DexEdit(target = "onCreate")
-    protected void source_onCreate(Bundle bundle) { throw null; }
-
-    // Add a replacement for the renamed method.
-    @DexAdd
+    // Wrap the existing onCreate method.
+    @DexWrap
     @Override protected void onCreate(Bundle bundle){
         // First invoke the original onCreate method.
-        source_onCreate(bundle);
+        onCreate(bundle);
         // Then replace the text and handler of the device ID 'Copy' button.
         device_copy.setText("Share");
         device_copy.setOnClickListener(new DeviceCopyOnClick());
@@ -70,10 +67,7 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
-    @DexEdit(target = "onOptionsItemSelected")
-    protected boolean source_onOptionsItemSelected(MenuItem item) { throw null; }
-
-    @DexAdd
+    @DexWrap
     @Override public boolean onOptionsItemSelected(MenuItem item) {
         // We imported this file chooser from the project's 'build.gradle' script:
         // -> https://github.com/bartwell/ExFilePicker
@@ -86,7 +80,7 @@ public class MainActivity extends ActionBarActivity {
             return true;
         }
         // If 'Rate' was not the selected item, delegate to the original handler.
-        return source_onOptionsItemSelected(item);
+        return onOptionsItemSelected(item);
     }
 
 }
