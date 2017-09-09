@@ -10,11 +10,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import lanchon.dexpatcher.annotation.DexAdd;
-import lanchon.dexpatcher.annotation.DexEdit;
-import lanchon.dexpatcher.annotation.DexIgnore;
-import lanchon.dexpatcher.annotation.DexWrap;
 import ru.bartwell.exfilepicker.ExFilePickerActivity;
+
+import lanchon.dexpatcher.annotation.*;
 
 @DexEdit
 public class MainActivity extends ActionBarActivity {
@@ -35,12 +33,11 @@ public class MainActivity extends ActionBarActivity {
     //@DexIgnore ImageView makeinfoapps;
     @DexIgnore boolean val;
 
-    // Wrap the existing onCreate method.
-    @DexWrap
+    // Append code to the existing onCreate method.
+    @DexAppend
     @Override protected void onCreate(Bundle bundle){
-        // First invoke the original onCreate method.
-        onCreate(bundle);
-        // Then replace the text and handler of the device ID 'Copy' button.
+        // After executing the original onCreate method, replace the text and handler
+        // of the device ID 'Copy' button to make it a 'Share' button instead.
         device_copy.setText("Share");
         device_copy.setOnClickListener(new DeviceCopyOnClick());
     }
@@ -62,6 +59,7 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+    // Wrap the existing onOptionsItemSelected method.
     @DexWrap
     @Override public boolean onOptionsItemSelected(MenuItem item) {
         // We imported this file chooser from the project's 'build.gradle' script:
