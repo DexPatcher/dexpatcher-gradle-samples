@@ -61,6 +61,9 @@ dexpatcherConfig {
         // annotation names. Defaults to 'lanchon.dexpatcher.annotation'.
         //annotationPackage = 'lanchon.dexpatcher.annotation'
 
+        // Enable implicit ignore of trivial default constructors. Defaults to true.
+        //constructorAutoIgnore = true
+
         // Enable compatibility with the deprecated DexTag.
         //compatDexTag = true
 
