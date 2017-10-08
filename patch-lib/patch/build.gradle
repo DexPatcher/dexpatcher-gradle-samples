@@ -18,6 +18,8 @@ dexpatcherConfig {
 
     // Specific Plugin Configuration
     patchLibrary {
+        // Enable import of Java symbols from the source app. Defaults to true.
+        //importSymbols = true;
     }
 }
 

@@ -17,6 +17,9 @@ dexpatcherConfig {
 
     // Specific Plugin Configuration
     patchedApplication {
+        // Enable import of Java symbols from the source app. Defaults to true.
+        //importSymbols = true;
+
         // Speed up debug builds by enabling multi-threaded multi-dex processing for them,
         // but only if multi-dex mode is already enabled for them. Defaults to true.
         //multiDexThreadedForMultiDexDebugBuilds = true
