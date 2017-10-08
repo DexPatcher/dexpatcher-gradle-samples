@@ -24,6 +24,22 @@ dexpatcherConfig {
         // cleanAll tasks to clean the library.
         disableClean = true
     }
+
+    // Per-Tool Defaults
+    apktool {
+        //frameworkDirAsInput = 'framework'   // use framework in project subdirectory
+        //frameworkTag = 'tag'
+        //apiLevel = 14
+        //keepBrokenResources = true
+        //stripDebugInfo = true
+    }
+
+    dex2jar {
+        //translateCode = false
+        //translateDebugInfo = true
+        //optimizeSynchronized = true
+        //reuseRegisters = true
+    }
 }
 
 // Configure the decodeApk, dex2jar and apkLibrary tasks here.
