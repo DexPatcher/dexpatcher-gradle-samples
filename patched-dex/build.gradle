@@ -1,0 +1,188 @@
+/*
+ * DexPatcher - Copyright 2015-2017 Rodrigo Balerdi
+ * (GNU General Public License version 3 or later)
+ *
+ * DexPatcher is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published
+ * by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
+ */
+
+plugins {
+    id 'java'
+    id "com.github.lanchon.dexpatcher.base" version "0.4.6"
+}
+
+// The DexPatcher Base plugin provides basic DexPatcher, Apktool and dex2jar tasks.
+
+import java.util.zip.ZipException
+import java.util.zip.ZipFile
+
+import lanchon.dexpatcher.gradle.tasks.*;
+import lanchon.dexpatcher.gradle.tasks.DexpatcherTask.Verbosity;
+
+// Configuration
+
+// This is a minimal signature spoofing patch for Android versions 4.1 to 6.0.
+// For more information please visit: https://github.com/Lanchon/haystack
+
+String sdkDir = null
+String dexpatcherDir = null
+
+File sourceFile = fileTree('source').singleFile
+
+boolean importSourceSymbols = true
+
+Integer importAndroidApiLevel = 23
+boolean importAndroidApiInternals = true
+
+String androidBuildTools = '23.0.3'
+
+sourceCompatibility = '1.7'
+
+boolean multiDex = true
+boolean multiDexThreaded = false
+boolean constructorAutoIgnore = true
+Verbosity verbosity = Verbosity.VERBOSE
+
+// Setup Tool Paths
+
+def localProperties = getPropertiesRecursive(project, 'local.properties')
+if (!sdkDir) sdkDir = localProperties.getProperty('sdk.dir')
+if (!dexpatcherDir) dexpatcherDir = localProperties.getProperty('dexpatcher.dir')
+
+// Import Tool Dependencies
+
+dependencies {
+    compile fileTree(new File(dexpatcherDir, 'libs/compile'))
+    compileOnly fileTree(new File(dexpatcherDir, 'libs/provided'))
+}
+
+// Import Android API
+
+if (importAndroidApiLevel) {
+    def platform = new File(sdkDir, "platforms/android-$importAndroidApiLevel")
+    compileJava {
+        options.bootClasspath = checkFile(new File(platform, 'android.jar')).path
+    }
+    if (importAndroidApiInternals) {
+        dependencies {
+            compileOnly files(checkFile(new File(platform, 'data/layoutlib.jar')))
+        }
+    }
+}
+
+// Import Source Symbols
+
+def dex2jarFile = new File(project.buildDir, 'dex2jar/classes.zip')
+def dex2jarExceptionFile = new File(project.buildDir, 'dex2jar/dex2jar-error.zip')
+
+task dex2jar(type: Dex2jarTask) {
+    description = "Translates Dalvik bytecode into Java bytecode."
+    dexFiles = sourceFile
+    outputFile = dex2jarFile
+    exceptionFile = dex2jarExceptionFile
+}
+
+configurations {
+    sourceSymbols
+}
+
+artifacts {
+    if (importSourceSymbols) sourceSymbols file: dex2jarFile, builtBy: dex2jar
+}
+
+dependencies {
+    compileOnly project(path: project.path, configuration: 'sourceSymbols')
+}
+
+// Create Patch
+
+jar.baseName = 'patch'
+def patchDexDir = new File(project.buildDir, 'patch-dex')
+
+task dx(type: JavaExec) {
+    description = "Translates Java bytecode into Dalvik bytecode."
+    dependsOn jar
+    def dxJar = checkFile(new File(sdkDir, "build-tools/$androidBuildTools/lib/dx.jar"))
+    def patchJar = jar.archivePath
+    inputs.files dxJar, patchJar
+    outputs.dir patchDexDir
+    inputs.property "multiDex", multiDex
+    classpath dxJar
+    main = 'com.android.dx.command.Main'
+    args '--dex'
+    if (multiDex) args '--multi-dex'
+    args '--output', patchDexDir
+    args patchJar
+    doFirst {
+        patchDexDir.mkdirs()
+    }
+}
+
+assemble.dependsOn dx
+
+// Apply Patch
+
+def patchedDexDir = new File(project.buildDir, 'patched-dex')
+
+task dexpatcher(type: DexpatcherTask) {
+    description = "Patches the source dex using the just-built patch dex."
+    dependsOn dx
+    source = sourceFile
+    patches = patchDexDir
+    outputDir = patchedDexDir
+}
+dexpatcher.multiDex = multiDex
+dexpatcher.multiDexThreaded = multiDexThreaded
+dexpatcher.constructorAutoIgnore = constructorAutoIgnore
+dexpatcher.verbosity = verbosity
+
+assemble.dependsOn dexpatcher
+
+// Repack Archive
+
+boolean sourceIsZip = false
+if (sourceFile.isFile()) {
+    try {
+        new ZipFile(sourceFile).close()
+        sourceIsZip = true
+    } catch (ZipException e) {}
+}
+
+if (sourceIsZip) {
+
+    task repack(type: Zip) {
+        description = "Repacks the patched dex into a copy of the source archive."
+        dependsOn dexpatcher
+        destinationDir = new File(project.buildDir, 'repack')
+        archiveName sourceFile.name
+        appendix = "patched"
+        from(zipTree(sourceFile)) {
+            exclude 'classes*.dex'
+        }
+        from(fileTree(patchedDexDir))
+    }
+
+    assemble.dependsOn repack
+
+}
+
+// Helpers
+
+static Properties getPropertiesRecursive(Project project, String fileName) {
+    Properties parentProperties = project.parent ? getPropertiesRecursive(project.parent, fileName) : null
+    Properties properties = new Properties(parentProperties)
+    File file = project.file(fileName)
+    if (file.exists()) {
+        file.withInputStream {
+            properties.load(it)
+        }
+    }
+    return properties
+}
+
+static File checkFile(File file) {
+    if (!file.exists()) throw new FileNotFoundException("File not found: $file")
+    return file
+}

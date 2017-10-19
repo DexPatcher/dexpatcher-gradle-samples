@@ -1,0 +1,49 @@
+/*
+ * Copyright (C) 2016, 2017 Lanchon <https://github.com/Lanchon>
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.android.server.pm;
+
+import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageParser;
+
+import lanchon.dexpatcher.annotation.*;
+
+// This is a minimal signature spoofing patch for Android versions 4.1 to 6.0.
+// For more information please visit: https://github.com/Lanchon/haystack
+
+// Lets modify the PackageManagerService class.
+@DexEdit(contentOnly = true)
+public class PackageManagerService /* extends IPackageManager.Stub */ {
+
+    // We need to declare this field to be able to reference it from the patch.
+    // The field itself provided by the patch will be discarded.
+    @DexIgnore
+    /* final */ Context mContext;
+
+    // Wrap the existing generatePackageInfo(...) method with this new method.
+    // The new method calls the original, then invokes a hook that can modify
+    // its return value.
+    @DexWrap
+    PackageInfo generatePackageInfo(PackageParser.Package p, int flags, int userId) {
+        // This recursive call gets converted to an invocation of the original
+        // method being wrapped.
+        PackageInfo pi = generatePackageInfo(p, flags, userId);
+        if (p != null && pi != null) pi = GeneratePackageInfoHook.hook(pi, mContext, p, flags, userId);
+        return pi;
+    }
+
+}
