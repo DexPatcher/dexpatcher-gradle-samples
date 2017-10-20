@@ -19,18 +19,15 @@ import java.util.zip.ZipException
 import java.util.zip.ZipFile
 
 import lanchon.dexpatcher.gradle.tasks.*;
-import lanchon.dexpatcher.gradle.tasks.DexpatcherTask.Verbosity;
 
 // Configuration
 
 // This is a minimal signature spoofing patch for Android versions 4.1 to 6.0.
 // For more information please visit: https://github.com/Lanchon/haystack
 
-String sdkDir = null
-String dexpatcherDir = null
+sourceCompatibility = '1.7'
 
 File sourceFile = fileTree('source').singleFile
-
 boolean importSourceSymbols = true
 
 Integer importAndroidApiLevel = 23
@@ -38,20 +35,41 @@ boolean importAndroidApiInternals = true
 
 String androidBuildTools = '23.0.3'
 
-sourceCompatibility = '1.7'
+boolean multiDex = false
 
-boolean multiDex = true
-boolean multiDexThreaded = false
-boolean constructorAutoIgnore = true
-Verbosity verbosity = Verbosity.VERBOSE
+dexpatcherConfig.dex2jar {
+    //translateCode = false
+    //translateDebugInfo = true
+    //optimizeSynchronized = true
+    //reuseRegisters = true
+}
 
-// Setup Tool Paths
+dexpatcherConfig.dexpatcher {
+    //apiLevel = 14
+    //multiDexThreaded = true
+    //multiDexJobs = 8
+    //maxDexPoolSize = 65536
+    //annotationPackage = 'lanchon.dexpatcher.annotation'
+    //constructorAutoIgnore = true
+    //compatDexTag = true
+    verbosity = VERBOSE
+    //logSourcePath = true
+    //logSourcePathRoot = file('src/main/java')
+    //logStats = true
+}
+
+String sdkDir = null
+String dexpatcherDir = null
+
+// Setup Tools
 
 def localProperties = getPropertiesRecursive(project, 'local.properties')
 if (!sdkDir) sdkDir = localProperties.getProperty('sdk.dir')
 if (!dexpatcherDir) dexpatcherDir = localProperties.getProperty('dexpatcher.dir')
 
-// Import Tool Dependencies
+dexpatcherConfig.dir = dexpatcherDir
+dexpatcherConfig.dexpatcher.multiDex = multiDex
+boolean dxMultiDex = multiDex
 
 dependencies {
     compile fileTree(new File(dexpatcherDir, 'libs/compile'))
@@ -108,11 +126,11 @@ task dx(type: JavaExec) {
     def patchJar = jar.archivePath
     inputs.files dxJar, patchJar
     outputs.dir patchDexDir
-    inputs.property "multiDex", multiDex
+    inputs.property "multiDex", dxMultiDex
     classpath dxJar
     main = 'com.android.dx.command.Main'
     args '--dex'
-    if (multiDex) args '--multi-dex'
+    if (dxMultiDex) args '--multi-dex'
     args '--output', patchDexDir
     args patchJar
     doFirst {
@@ -133,10 +151,6 @@ task dexpatcher(type: DexpatcherTask) {
     patches = patchDexDir
     outputDir = patchedDexDir
 }
-dexpatcher.multiDex = multiDex
-dexpatcher.multiDexThreaded = multiDexThreaded
-dexpatcher.constructorAutoIgnore = constructorAutoIgnore
-dexpatcher.verbosity = verbosity
 
 assemble.dependsOn dexpatcher
 
@@ -151,13 +165,11 @@ if (sourceFile.isFile()) {
 }
 
 if (sourceIsZip) {
-
     task repack(type: Zip) {
         description = "Repacks the patched dex into a copy of the source archive."
         dependsOn dexpatcher
         destinationDir = new File(project.buildDir, 'repack')
         archiveName sourceFile.name
-        appendix = "patched"
         from(zipTree(sourceFile)) {
             exclude 'classes*.dex'
         }
@@ -165,7 +177,6 @@ if (sourceIsZip) {
     }
 
     assemble.dependsOn repack
-
 }
 
 // Helpers
