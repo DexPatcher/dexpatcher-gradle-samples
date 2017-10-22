@@ -25,6 +25,15 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" scope="PROVIDED">
+      <library name="Gradle: android">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../../sdk/platforms/android-23/android.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
       <library name="Gradle: layoutlib">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../../sdk/platforms/android-23/data/layoutlib.jar!/" />

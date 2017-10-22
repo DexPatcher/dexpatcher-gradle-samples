@@ -81,6 +81,8 @@ dependencies {
 if (importAndroidApiLevel) {
     def platform = new File(sdkDir, "platforms/android-$importAndroidApiLevel")
     compileJava.options.bootClasspath = checkFile(new File(platform, 'android.jar')).path
+    // Ugly hack to make IntelliJ IDEA see the Android API:
+    dependencies.compileOnly files(compileJava.options.bootClasspath)
     if (importAndroidApiInternals) {
         dependencies.compileOnly files(checkFile(new File(platform, 'data/layoutlib.jar')))
     }
