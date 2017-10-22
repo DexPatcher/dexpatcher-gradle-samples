@@ -18,7 +18,8 @@ plugins {
 import java.util.zip.ZipException
 import java.util.zip.ZipFile
 
-import lanchon.dexpatcher.gradle.tasks.*;
+import lanchon.dexpatcher.gradle.tasks.Dex2jarTask;
+import lanchon.dexpatcher.gradle.tasks.DexpatcherTask;
 
 // Configuration
 
@@ -58,13 +59,13 @@ dexpatcherConfig.dexpatcher {
     //logStats = true
 }
 
-String sdkDir = null
+String androidSdkDir = null
 String dexpatcherDir = null
 
 // Setup Tools
 
 def localProperties = getPropertiesRecursive(project, 'local.properties')
-if (!sdkDir) sdkDir = localProperties.getProperty('sdk.dir')
+if (!androidSdkDir) androidSdkDir = localProperties.getProperty('sdk.dir')
 if (!dexpatcherDir) dexpatcherDir = localProperties.getProperty('dexpatcher.dir')
 
 dexpatcherConfig.dir = dexpatcherDir
@@ -79,7 +80,7 @@ dependencies {
 // Import Android API
 
 if (importAndroidApiLevel) {
-    def platform = new File(sdkDir, "platforms/android-$importAndroidApiLevel")
+    def platform = new File(androidSdkDir, "platforms/android-$importAndroidApiLevel")
     compileJava.options.bootClasspath = checkFile(new File(platform, 'android.jar')).path
     // Ugly hack to make IntelliJ IDEA see the Android API:
     dependencies.compileOnly files(compileJava.options.bootClasspath)
@@ -113,7 +114,7 @@ def patchDexDir = new File(project.buildDir, 'patch-dex')
 task dx(type: JavaExec) {
     description = "Translates Java bytecode into Dalvik bytecode."
     dependsOn jar
-    def dxJar = checkFile(new File(sdkDir, "build-tools/$androidBuildTools/lib/dx.jar"))
+    def dxJar = checkFile(new File(androidSdkDir, "build-tools/$androidBuildTools/lib/dx.jar"))
     def patchJar = jar.archivePath
     inputs.files dxJar, patchJar
     outputs.dir patchDexDir
