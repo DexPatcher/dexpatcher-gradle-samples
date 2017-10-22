@@ -80,13 +80,9 @@ dependencies {
 
 if (importAndroidApiLevel) {
     def platform = new File(sdkDir, "platforms/android-$importAndroidApiLevel")
-    compileJava {
-        options.bootClasspath = checkFile(new File(platform, 'android.jar')).path
-    }
+    compileJava.options.bootClasspath = checkFile(new File(platform, 'android.jar')).path
     if (importAndroidApiInternals) {
-        dependencies {
-            compileOnly files(checkFile(new File(platform, 'data/layoutlib.jar')))
-        }
+        dependencies.compileOnly files(checkFile(new File(platform, 'data/layoutlib.jar')))
     }
 }
 
@@ -104,9 +100,7 @@ task dex2jar(type: Dex2jarTask) {
 
 if (importSourceSymbols) {
     compileJava.dependsOn dex2jar
-    dependencies {
-        compileOnly files(dex2jarFile)
-    }
+    dependencies.compileOnly files(dex2jarFile)
 }
 
 // Create Patch
