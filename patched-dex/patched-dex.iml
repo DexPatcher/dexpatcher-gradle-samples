@@ -18,7 +18,7 @@
     <orderEntry type="module-library" scope="PROVIDED">
       <library name="Gradle: dexpatcher-annotation-1.5.0">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../dexpatcher-gradle-tools/libs/provided/dexpatcher-annotation/dexpatcher-annotation-1.5.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../dexpatcher-gradle-tools-dev/libs/provided/dexpatcher-annotation/dexpatcher-annotation-1.5.0.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -28,6 +28,15 @@
       <library name="Gradle: layoutlib">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../../sdk/platforms/android-23/data/layoutlib.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library name="Gradle: classes:zip">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/build/dex2jar/classes.zip!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

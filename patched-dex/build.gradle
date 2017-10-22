@@ -102,16 +102,11 @@ task dex2jar(type: Dex2jarTask) {
     exceptionFile = dex2jarExceptionFile
 }
 
-configurations {
-    sourceSymbols
-}
-
-artifacts {
-    if (importSourceSymbols) sourceSymbols file: dex2jarFile, builtBy: dex2jar
-}
-
-dependencies {
-    compileOnly project(path: project.path, configuration: 'sourceSymbols')
+if (importSourceSymbols) {
+    compileJava.dependsOn dex2jar
+    dependencies {
+        compileOnly files(dex2jarFile)
+    }
 }
 
 // Create Patch
