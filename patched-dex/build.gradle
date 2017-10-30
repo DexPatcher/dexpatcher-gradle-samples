@@ -18,6 +18,7 @@ plugins {
 import java.util.zip.ZipException
 import java.util.zip.ZipFile
 
+import lanchon.dexpatcher.gradle.Resolver
 import lanchon.dexpatcher.gradle.tasks.Dex2jarTask;
 import lanchon.dexpatcher.gradle.tasks.DexpatcherTask;
 
@@ -59,40 +60,42 @@ dexpatcherConfig.dexpatcher {
     //logStats = true
 }
 
-String androidSdkDir = null
-String dexpatcherDir = null
+File androidSdkDir = null
+
+//String home = System.properties['user.home']
+//androidSdkDir = file("$home/android/sdk")
+//dexpatcherConfig.dir = file("$home/android/dexpatcher/dexpatcher-gradle-tools")
 
 // Setup Tools
 
-def localProperties = getPropertiesRecursive(project, 'local.properties')
-if (!androidSdkDir) androidSdkDir = localProperties.getProperty('sdk.dir')
-if (!dexpatcherDir) dexpatcherDir = localProperties.getProperty('dexpatcher.dir')
+if (!androidSdkDir) androidSdkDir = dexpatcherConfig.properties.getAsFile('sdk.dir')
 
-dexpatcherConfig.dir = dexpatcherDir
 dexpatcherConfig.dexpatcher.multiDex = multiDex
 boolean dxMultiDex = multiDex
 
 dependencies {
-    compile fileTree(new File(dexpatcherDir, 'libs/compile'))
-    compileOnly fileTree(new File(dexpatcherDir, 'libs/provided'))
+    compile Resolver.getJars(project, dexpatcherConfig.resolvedAddedLibDir)
+    compileOnly Resolver.getJars(project, dexpatcherConfig.resolvedProvidedLibDir)
 }
 
 // Import Android API
 
 if (importAndroidApiLevel) {
-    def platform = new File(androidSdkDir, "platforms/android-$importAndroidApiLevel")
-    compileJava.options.bootClasspath = checkFile(new File(platform, 'android.jar')).path
+    def platform = Resolver.getFile(androidSdkDir, "platforms/android-$importAndroidApiLevel")
+    compileJava.options.bootClasspath = checkFile(Resolver.getFile(platform, 'android.jar')).path
+    compileJava.options.extensionDirs = ''
     // Ugly hack to make IntelliJ IDEA see the Android API:
+    // (See: https://youtrack.jetbrains.com/issue/IDEA-180987)
     dependencies.compileOnly files(compileJava.options.bootClasspath)
     if (importAndroidApiInternals) {
-        dependencies.compileOnly files(checkFile(new File(platform, 'data/layoutlib.jar')))
+        dependencies.compileOnly files(checkFile(Resolver.getFile(platform, 'data/layoutlib.jar')))
     }
 }
 
 // Import Source Symbols
 
-def dex2jarFile = new File(project.buildDir, 'dex2jar/classes.zip')
-def dex2jarExceptionFile = new File(project.buildDir, 'dex2jar/dex2jar-error.zip')
+def dex2jarFile = Resolver.getFile(project.buildDir, 'dex2jar/classes.jar')
+def dex2jarExceptionFile = Resolver.getFile(project.buildDir, 'dex2jar/dex2jar-error.zip')
 
 task dex2jar(type: Dex2jarTask) {
     description = "Translates Dalvik bytecode into Java bytecode."
@@ -109,12 +112,12 @@ if (importSourceSymbols) {
 // Create Patch
 
 jar.baseName = 'patch'
-def patchDexDir = new File(project.buildDir, 'patch-dex')
+def patchDexDir = Resolver.getFile(project.buildDir, 'patch-dex')
 
 task dx(type: JavaExec) {
     description = "Translates Java bytecode into Dalvik bytecode."
     dependsOn jar
-    def dxJar = checkFile(new File(androidSdkDir, "build-tools/$androidBuildTools/lib/dx.jar"))
+    def dxJar = checkFile(Resolver.getFile(androidSdkDir, "build-tools/$androidBuildTools/lib/dx.jar"))
     def patchJar = jar.archivePath
     inputs.files dxJar, patchJar
     outputs.dir patchDexDir
@@ -134,7 +137,7 @@ assemble.dependsOn dx
 
 // Apply Patch
 
-def patchedDexDir = new File(project.buildDir, 'patched-dex')
+def patchedDexDir = Resolver.getFile(project.buildDir, 'patched-dex')
 
 task dexpatcher(type: DexpatcherTask) {
     description = "Patches the source dex using the just-built patch dex."
@@ -160,7 +163,7 @@ if (sourceIsZip) {
     task repack(type: Zip) {
         description = "Repacks the patched dex into a copy of the source archive."
         dependsOn dexpatcher
-        destinationDir = new File(project.buildDir, 'repack')
+        destinationDir = Resolver.getFile(project.buildDir, 'repack')
         archiveName sourceFile.name
         from(zipTree(sourceFile)) {
             exclude 'classes*.dex'
@@ -172,18 +175,6 @@ if (sourceIsZip) {
 }
 
 // Helpers
-
-static Properties getPropertiesRecursive(Project project, String fileName) {
-    Properties parentProperties = project.parent ? getPropertiesRecursive(project.parent, fileName) : null
-    Properties properties = new Properties(parentProperties)
-    File file = project.file(fileName)
-    if (file.exists()) {
-        file.withInputStream {
-            properties.load(it)
-        }
-    }
-    return properties
-}
 
 static File checkFile(File file) {
     if (!file.exists()) throw new FileNotFoundException("File not found: $file")

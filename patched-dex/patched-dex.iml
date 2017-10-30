@@ -43,9 +43,9 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" scope="PROVIDED">
-      <library name="Gradle: classes:zip">
+      <library name="Gradle: classes">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/build/dex2jar/classes.zip!/" />
+          <root url="jar://$MODULE_DIR$/build/dex2jar/classes.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
