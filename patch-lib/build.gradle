@@ -9,7 +9,7 @@ buildscript {
         // Android Gradle plugins:
         classpath 'com.android.tools.build:gradle:2.2.3'
         // DexPatcher Gradle plugins:
-        classpath 'com.github.lanchon.dexpatcher:dexpatcher-gradle:0.4.6'
+        classpath 'com.github.lanchon.dexpatcher:dexpatcher-gradle:1.0.0'
     }
 }
 

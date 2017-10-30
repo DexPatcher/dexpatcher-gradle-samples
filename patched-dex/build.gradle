@@ -10,7 +10,7 @@
 
 plugins {
     id 'java'
-    id 'com.github.lanchon.dexpatcher.base' version '0.4.6'
+    id 'com.github.lanchon.dexpatcher.base' version '1.0.0'
 }
 
 // The DexPatcher Base plugin provides basic DexPatcher, Apktool and dex2jar tasks.
