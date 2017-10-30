@@ -19,6 +19,9 @@ dexpatcherConfig {
 
     // Specific Plugin Configuration
     apkLibrary {
+        // The source application file or directory. Defaults to 'apk'.
+        //apkFileOrDir = 'apk'
+
         // Enable this setting to make this project ignore the clean task so that the built
         // apk library survives a global clean. You can always use the cleanApkLibrary or
         // cleanAll tasks to clean the library.
