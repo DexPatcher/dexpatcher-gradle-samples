@@ -1,0 +1,4 @@
+includeBuild 'patched-app'
+includeBuild 'patch-lib'
+includeBuild 'multi-dex'
+includeBuild 'patched-dex'

@@ -1,0 +1,36 @@
+/*
+ * DexPatcher - Copyright 2015-2017 Rodrigo Balerdi
+ * (GNU General Public License version 3 or later)
+ *
+ * DexPatcher is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published
+ * by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
+ */
+
+task build {
+    dependsOn gradle.includedBuild('patched-app').task(':patched:build')
+    dependsOn gradle.includedBuild('patch-lib').task(':patched:build')
+    dependsOn gradle.includedBuild('multi-dex').task(':patched:build')
+    dependsOn gradle.includedBuild('patched-dex').task(':build')
+}
+
+
+task clean {
+    dependsOn gradle.includedBuild('patched-app').task(':source:clean')
+    dependsOn gradle.includedBuild('patched-app').task(':patched:clean')
+    dependsOn gradle.includedBuild('patch-lib').task(':source:clean')
+    dependsOn gradle.includedBuild('patch-lib').task(':patch:clean')
+    dependsOn gradle.includedBuild('patch-lib').task(':patched:clean')
+    dependsOn gradle.includedBuild('multi-dex').task(':source:clean')
+    dependsOn gradle.includedBuild('multi-dex').task(':patched:clean')
+    dependsOn gradle.includedBuild('patched-dex').task(':clean')
+}
+
+
+task cleanAll {
+    dependsOn gradle.includedBuild('patched-app').task(':source:cleanAll')
+    dependsOn gradle.includedBuild('patch-lib').task(':source:cleanAll')
+    dependsOn gradle.includedBuild('multi-dex').task(':source:cleanAll')
+    dependsOn gradle.includedBuild('patched-dex').task(':clean')
+}

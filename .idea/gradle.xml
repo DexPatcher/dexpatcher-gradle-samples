@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="GradleSettings">
+    <option name="linkedExternalProjectsSettings">
+      <GradleProjectSettings>
+        <compositeConfiguration>
+          <compositeBuild compositeDefinitionSource="SCRIPT">
+            <builds>
+              <build path="$PROJECT_DIR$/patched-app">
+                <projects>
+                  <project path="$PROJECT_DIR$/patched-app" />
+                  <project path="$PROJECT_DIR$/patched-app/patched" />
+                  <project path="$PROJECT_DIR$/patched-app/source" />
+                </projects>
+              </build>
+              <build path="$PROJECT_DIR$/patch-lib">
+                <projects>
+                  <project path="$PROJECT_DIR$/patch-lib" />
+                  <project path="$PROJECT_DIR$/patch-lib/patch" />
+                  <project path="$PROJECT_DIR$/patch-lib/patched" />
+                  <project path="$PROJECT_DIR$/patch-lib/source" />
+                </projects>
+              </build>
+              <build path="$PROJECT_DIR$/multi-dex">
+                <projects>
+                  <project path="$PROJECT_DIR$/multi-dex" />
+                  <project path="$PROJECT_DIR$/multi-dex/patched" />
+                  <project path="$PROJECT_DIR$/multi-dex/source" />
+                </projects>
+              </build>
+              <build path="$PROJECT_DIR$/patched-dex">
+                <projects>
+                  <project path="$PROJECT_DIR$/patched-dex" />
+                </projects>
+              </build>
+            </builds>
+          </compositeBuild>
+        </compositeConfiguration>
+        <option name="distributionType" value="DEFAULT_WRAPPED" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/multi-dex" />
+            <option value="$PROJECT_DIR$/multi-dex/patched" />
+            <option value="$PROJECT_DIR$/multi-dex/source" />
+            <option value="$PROJECT_DIR$/patch-lib" />
+            <option value="$PROJECT_DIR$/patch-lib/patch" />
+            <option value="$PROJECT_DIR$/patch-lib/patched" />
+            <option value="$PROJECT_DIR$/patch-lib/source" />
+            <option value="$PROJECT_DIR$/patched-app" />
+            <option value="$PROJECT_DIR$/patched-app/patched" />
+            <option value="$PROJECT_DIR$/patched-app/source" />
+            <option value="$PROJECT_DIR$/patched-dex" />
+          </set>
+        </option>
+        <option name="resolveModulePerSourceSet" value="false" />
+      </GradleProjectSettings>
+    </option>
+  </component>
+</project>

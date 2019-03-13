@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module external.linked.project.id="patch-lib:source" external.linked.project.path="$MODULE_DIR$/../../../../patch-lib/source" external.root.project.path="$MODULE_DIR$/../../../.." external.system.id="GRADLE" external.system.module.group="patch-lib" external.system.module.version="unspecified" type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <output url="file://$MODULE_DIR$/../../../../patch-lib/source/out/production/classes" />
+    <output-test url="file://$MODULE_DIR$/../../../../patch-lib/source/out/test/classes" />
+    <exclude-output />
+    <content url="file://$MODULE_DIR$/../../../../patch-lib/source">
+      <excludeFolder url="file://$MODULE_DIR$/../../../../patch-lib/source/.gradle" />
+      <excludeFolder url="file://$MODULE_DIR$/../../../../patch-lib/source/build" />
+      <excludeFolder url="file://$MODULE_DIR$/../../../../patch-lib/source/out" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>
