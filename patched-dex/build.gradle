@@ -51,7 +51,8 @@ import lanchon.dexpatcher.gradle.tasks.DexpatcherTask;
 
 sourceCompatibility = '1.7'
 
-File sourceFile = fileTree('source').singleFile
+RegularFile sourceFile = layout.projectDirectory.file(fileTree('source').singleFile.path)
+
 boolean importSourceSymbols = true
 
 Integer importAndroidApiLevel = 23
@@ -82,46 +83,47 @@ dexpatcherConfig.dexpatcher {
     //logStats = true
 }
 
-File androidSdkDir = null
+Directory androidSdkDir = null
 
 //String home = System.properties['user.home']
-//androidSdkDir = file("$home/android/sdk")
-//dexpatcherConfig.dir = file("$home/android/dexpatcher/dexpatcher-gradle-tools")
+//androidSdkDir = layout.projectDirectory.dir("$home/android/sdk")
+//dexpatcherConfig.dir = layout.projectDirectory.dir("$home/android/dexpatcher/dexpatcher-gradle-tools")
 
 // Setup Tools
 
-if (!androidSdkDir) androidSdkDir = dexpatcherConfig.properties.getAsFile('sdk.dir')
+if (!androidSdkDir) androidSdkDir = dexpatcherConfig.properties.getAsDirectory('sdk.dir')
 
 dexpatcherConfig.dexpatcher.multiDex = multiDex
 boolean dxMultiDex = multiDex
 
 dependencies {
-    compile Resolver.getJars(project, dexpatcherConfig.resolvedAddedLibDir)
-    compileOnly Resolver.getJars(project, dexpatcherConfig.resolvedProvidedLibDir)
+
+    compile Resolver.getJars(project, dexpatcherConfig.resolvedAddedLibDir).get()
+    compileOnly Resolver.getJars(project, dexpatcherConfig.resolvedProvidedLibDir).get()
 }
 
 // Import Android API
 
 if (importAndroidApiLevel) {
-    def platform = Resolver.getFile(androidSdkDir, "platforms/android-$importAndroidApiLevel")
-    compileJava.options.bootClasspath = checkFile(Resolver.getFile(platform, 'android.jar')).path
+    def platform = androidSdkDir.dir("platforms/android-$importAndroidApiLevel")
+    compileJava.options.bootstrapClasspath = files(checkFile(platform.file('android.jar')))
     compileJava.options.extensionDirs = ''
     // Ugly hack to make IntelliJ IDEA see the Android API:
     // (See: https://youtrack.jetbrains.com/issue/IDEA-180987)
-    dependencies.compileOnly files(compileJava.options.bootClasspath)
+    dependencies.compileOnly files(compileJava.options.bootstrapClasspath)
     if (importAndroidApiInternals) {
-        dependencies.compileOnly files(checkFile(Resolver.getFile(platform, 'data/layoutlib.jar')))
+        dependencies.compileOnly files(checkFile(platform.file('data/layoutlib.jar')))
     }
 }
 
 // Import Source Symbols
 
-def dex2jarFile = Resolver.getFile(project.buildDir, 'dex2jar/classes.jar')
-def dex2jarExceptionFile = Resolver.getFile(project.buildDir, 'dex2jar/dex2jar-error.zip')
+def dex2jarFile = layout.buildDirectory.get().file('dex2jar/classes.jar')
+def dex2jarExceptionFile = layout.buildDirectory.get().file('dex2jar/dex2jar-error.zip')
 
 task dex2jar(type: Dex2jarTask) {
     description = "Translates Dalvik bytecode into Java bytecode."
-    dexFiles = sourceFile
+    dexFiles.from sourceFile
     outputFile = dex2jarFile
     exceptionFile = dex2jarExceptionFile
 }
@@ -134,12 +136,12 @@ if (importSourceSymbols) {
 // Create Patch
 
 jar.baseName = 'patch'
-def patchDexDir = Resolver.getFile(project.buildDir, 'patch-dex')
+def patchDexDir = layout.buildDirectory.get().dir('patch-dex')
 
 task dx(type: JavaExec) {
     description = "Translates Java bytecode into Dalvik bytecode."
     dependsOn jar
-    def dxJar = checkFile(Resolver.getFile(androidSdkDir, "build-tools/$androidBuildTools/lib/dx.jar"))
+    def dxJar = checkFile(androidSdkDir.file("build-tools/$androidBuildTools/lib/dx.jar"))
     def patchJar = jar.archivePath
     inputs.files dxJar, patchJar
     outputs.dir patchDexDir
@@ -151,7 +153,7 @@ task dx(type: JavaExec) {
     args '--output', patchDexDir
     args patchJar
     doFirst {
-        patchDexDir.mkdirs()
+        patchDexDir.asFile.mkdirs()
     }
 }
 
@@ -165,7 +167,7 @@ task dexpatcher(type: DexpatcherTask) {
     description = "Patches the source dex using the just-built patch dex."
     dependsOn dx
     source = sourceFile
-    patches = patchDexDir
+    patch = patchDexDir
     outputDir = patchedDexDir
 }
 
@@ -174,9 +176,9 @@ assemble.dependsOn dexpatcher
 // Repack Archive
 
 boolean sourceIsZip = false
-if (sourceFile.isFile()) {
+if (sourceFile.asFile.isFile()) {
     try {
-        new ZipFile(sourceFile).close()
+        new ZipFile(sourceFile.asFile).close()
         sourceIsZip = true
     } catch (ZipException e) {}
 }
@@ -185,8 +187,8 @@ if (sourceIsZip) {
     task repack(type: Zip) {
         description = "Repacks the patched dex into a copy of the source archive."
         dependsOn dexpatcher
-        destinationDir = Resolver.getFile(project.buildDir, 'repack')
-        archiveName sourceFile.name
+        destinationDir = layout.buildDirectory.get().dir('repack').asFile
+        archiveName sourceFile.asFile.name
         from(zipTree(sourceFile)) {
             exclude 'classes*.dex'
         }
@@ -198,7 +200,7 @@ if (sourceIsZip) {
 
 // Helpers
 
-static File checkFile(File file) {
-    if (!file.exists()) throw new FileNotFoundException("File not found: $file")
+static RegularFile checkFile(RegularFile file) {
+    if (!file.asFile.exists()) throw new FileNotFoundException("File not found: $file")
     return file
 }
