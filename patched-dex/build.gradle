@@ -8,21 +8,14 @@
  * or (at your option) any later version.
  */
 
-// The plugins DSL is avoided to be able to use a local repo for plugin development:
-
-/*
-plugins {
-    id 'java'
-    id 'com.github.lanchon.dexpatcher.base' version '1.0.0'
-}
-*/
-
-// Use legacy plugin application instead (but you should prefer the plugins DSL):
+// I use legacy plugin application to be able to use a local repo for plugin development:
 
 buildscript {
     repositories {
         // Gradle plugin repo:
         maven { url 'https://plugins.gradle.org/m2/' }
+        // This is the local repo I use for plugin development, you should remove it:
+        flatDir dirs: '../../dexpatcher-gradle/build/libs'
     }
     dependencies {
         // DexPatcher Gradle plugins:
@@ -30,15 +23,17 @@ buildscript {
     }
 }
 
-buildscript {
-    repositories {
-        // This is the local repo I use for plugin development, you should remove it:
-        flatDir dirs: '../../dexpatcher-gradle/build/libs'
-    }
-}
-
 apply plugin: 'java'
 apply plugin: 'com.github.lanchon.dexpatcher.base'
+
+// But you should prefer to use the plugins DSL:
+
+/*
+plugins {
+    id 'java'
+    id 'com.github.lanchon.dexpatcher.base' version '?.?.?'
+}
+*/
 
 // The DexPatcher Base plugin provides basic DexPatcher, Apktool and dex2jar tasks.
 
