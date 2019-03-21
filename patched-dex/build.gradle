@@ -97,9 +97,9 @@ dexpatcherConfig.dexpatcher.multiDex = multiDex
 boolean dxMultiDex = multiDex
 
 dependencies {
-
-    compile Resolver.getJars(project, dexpatcherConfig.resolvedAddedLibDir).get()
     compileOnly Resolver.getJars(project, dexpatcherConfig.resolvedProvidedLibDir).get()
+    implementation Resolver.getJars(project, dexpatcherConfig.resolvedCompileLibDir).get()
+    runtimeOnly Resolver.getJars(project, dexpatcherConfig.resolvedRuntimeLibDir).get()
 }
 
 // Import Android API
