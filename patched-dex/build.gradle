@@ -40,7 +40,7 @@ plugins {
 import java.util.zip.ZipException
 import java.util.zip.ZipFile
 
-import lanchon.dexpatcher.gradle.Resolver
+import lanchon.dexpatcher.gradle.Utils
 import lanchon.dexpatcher.gradle.tasks.Dex2jarTask;
 import lanchon.dexpatcher.gradle.tasks.DexpatcherTask;
 
@@ -97,9 +97,9 @@ dexpatcherConfig.dexpatcher.multiDex = multiDex
 boolean dxMultiDex = multiDex
 
 dependencies {
-    compileOnly Resolver.getJars(project, dexpatcherConfig.resolvedProvidedLibDir).get()
-    implementation Resolver.getJars(project, dexpatcherConfig.resolvedCompileLibDir).get()
-    runtimeOnly Resolver.getJars(project, dexpatcherConfig.resolvedRuntimeLibDir).get()
+    compileOnly Utils.getJars(project, dexpatcherConfig.resolvedProvidedLibDir).get()
+    implementation Utils.getJars(project, dexpatcherConfig.resolvedCompileLibDir).get()
+    runtimeOnly Utils.getJars(project, dexpatcherConfig.resolvedRuntimeLibDir).get()
 }
 
 // Import Android API
@@ -161,7 +161,7 @@ assemble.dependsOn dx
 
 // Apply Patch
 
-def patchedDexDir = Resolver.getFile(project.buildDir, 'patched-dex')
+def patchedDexDir = Utils.getFile(project.buildDir, 'patched-dex')
 
 task dexpatcher(type: DexpatcherTask) {
     description = "Patches the source dex using the just-built patch dex."
