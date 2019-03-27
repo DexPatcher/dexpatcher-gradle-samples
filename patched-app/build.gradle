@@ -1,11 +1,11 @@
 buildscript {
     repositories {
-        // jCenter repo:
+        google()
         jcenter()
     }
     dependencies {
         // Android Gradle plugins:
-        classpath 'com.android.tools.build:gradle:2.2.3'
+        classpath 'com.android.tools.build:gradle:3.3.2'
     }
 }
 
@@ -24,6 +24,11 @@ buildscript {
 
 allprojects {
     repositories {
+        google()
         jcenter()
     }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
 }

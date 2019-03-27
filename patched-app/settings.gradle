@@ -1,1 +1,1 @@
-include ':source', ':patched'
+include ':patched'

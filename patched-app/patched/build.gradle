@@ -3,8 +3,21 @@
 apply plugin: 'com.github.lanchon.dexpatcher.patched-application'
 
 // The DexPatcher Patched Application plugin produces a modified Android application
-// by applying changes and additions to code and resources of a source application
-// imported as a DexPatcher APK library.
+// by applying changes and additions to code and resources of a source application.
+
+dependencies {
+    // The source application is defined as a Gradle dependency.
+
+    // It is defined either as an Android APK dependency:
+    //sourceApk fileTree(dir: 'apk', include: ['*.apk', '*.jar', '*.zip'])
+
+    // Or as an DexPatcher APK library dependency:
+    //sourceApkLibrary fileTree(dir: 'apklib', include: ['*.apklib'])
+
+    // The contents of the 'apk' and 'apklib' project subdirectories are included in
+    // these configurations by default. Exactly one source application dependency
+    // must be available to the build.
+}
 
 // General Plugin Configuration
 dexpatcherConfig {
@@ -15,8 +28,12 @@ dexpatcherConfig {
     // subprojects and the local configuration is not posted to the VCS.
     //dir = '~/android/dexpatcher/dexpatcher-gradle-tools'
 
-    // Specific Plugin Configuration
+    // Plugin-Specific Configuration
     patchedApplication {
+        // Displays package and version information of the source application.
+        // Defaults to false.
+        printAppInfo = true;
+
         // Enable import of Java symbols from the source app. Defaults to true.
         //importSymbols = true;
 
@@ -31,7 +48,27 @@ dexpatcherConfig {
         //multiDexThreadedForAllDebugBuilds = true
     }
 
-    // Per-Tool Defaults
+    // Apktool Task Defaults
+    apktool {
+        // Use a framework provided in a project subdirectory:
+        //frameworkDirAsInput = layout.buildDirectory.dir('framework')
+        //frameworkDirAsOutput = null
+        //frameworkTag = 'tag'
+
+        //apiLevel = 14
+        //keepBrokenResources = true
+        //stripDebugInfo = true
+    }
+
+    // Dex2jar Task Defaults
+    dex2jar {
+        //translateCode = false
+        //translateDebugInfo = true
+        //optimizeSynchronized = true
+        //reuseRegisters = true
+    }
+
+    // DexPatcher Task Defaults
     dexpatcher {
         // The Android api level of dex files. The api level is auto-detected by DexPatcher
         // v1.2.0 and later, so this setting is no longer needed for normal operation.
@@ -84,7 +121,6 @@ dexpatcherConfig {
 
 android {
     compileSdkVersion 21
-    buildToolsVersion '23.0.3'
 
     defaultConfig {
         // The 'package' attribute in the patched app manifest must be different from the
@@ -107,24 +143,18 @@ android {
     }
 }
 
-tasks.withType(com.android.build.gradle.tasks.Lint) {
-    enabled = false
-}
+//tasks.withType(com.android.build.gradle.tasks.Lint) {
+//    enabled = false
+//}
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-
-    // To produce a patched application we need to import an apk library created from the
-    // app we want to modify. In this case we import the artifact produced by the 'source'
-    // subproject. But the library could be produced by an independent project and imported
-    // manually in Android Studio just like any other android library (aar) file.
-    compile project(':source')
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     // We import an Android library, a file chooser, just for fun. This pulls in all its
     // resources that will be transparently merged, like other resources from this project,
     // with those of the source app. Each component will have its own independent 'R' class.
     // The numeric IDs of the resources coming from the source app will be kept constant.
-    compile('ru.bartwell:exfilepicker:1.8') {
+    implementation('ru.bartwell:exfilepicker:1.8') {
         // But the imported library has a transitive dependency on a module that is already
         // present in the source app. So we exclude it from the import, keeping the source
         // app's version. Alternatively we could delete the copy brought in by the source
