@@ -30,7 +30,8 @@ dexpatcherConfig {
 
     // Plugin-Specific Configuration
     patchedApplication {
-        // Displays package and version information of the source application.
+        // Displays package and version information of the source app on every build.
+        // Note that this info can also be queried by invoking the 'sourceAppInfo' task.
         // Defaults to false.
         printAppInfo = true;
 
