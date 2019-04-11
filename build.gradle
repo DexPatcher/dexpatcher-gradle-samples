@@ -3,7 +3,7 @@ task build {
     dependsOn gradle.includedBuild('multi-dex').task(':app:build')
     dependsOn gradle.includedBuild('apk-lib').task(':app:build')
     //dependsOn gradle.includedBuild('patch-lib').task(':app:build')
-    //dependsOn gradle.includedBuild('patched-dex').task(':build')
+    dependsOn gradle.includedBuild('patched-dex').task(':build')
 }
 
 task clean {
@@ -13,5 +13,5 @@ task clean {
     dependsOn gradle.includedBuild('apk-lib').task(':app:build')
     //dependsOn gradle.includedBuild('patch-lib').task(':patch:clean')
     //dependsOn gradle.includedBuild('patch-lib').task(':app:clean')
-    //dependsOn gradle.includedBuild('patched-dex').task(':clean')
+    dependsOn gradle.includedBuild('patched-dex').task(':clean')
 }

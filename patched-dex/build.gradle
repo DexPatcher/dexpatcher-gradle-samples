@@ -96,7 +96,10 @@ if (!androidSdkDir) androidSdkDir = dexpatcherConfig.properties.getAsDirectory('
 dexpatcherConfig.dexpatcher.multiDex = multiDex
 boolean dxMultiDex = multiDex
 
-dexpatcherConfig.addLibDependencies(true)
+// Import DexPatcher annotations
+
+def providedLibs = Utils.getJars(project, dexpatcherConfig.resolvedProvidedLibDir)
+project.dependencies.add JavaPlugin.COMPILE_ONLY_CONFIGURATION_NAME, providedLibs
 
 // Import Android API
 
