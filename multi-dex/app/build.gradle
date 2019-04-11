@@ -20,19 +20,17 @@ dexpatcherConfig {
     dexpatcher {
         // MULTI-DEX TEST
 
-        // Note that DexPatcher multi-dex patched apps require an Android 5.0 device or
-        // newer to run. This is why the 'minSdkVersion' setting in the android section
-        // below was bumped to 21.
-
         // In this test we patch a multi-dex source app created by artificially limiting
         // the maximum number of method references per dex file. It was created using
         // DexPatcher tool's '--max-dex-pool-size' option.
 
-        // Enable multi-dex in the 'patched-application' plugin:
-        multiDex = true
-        // Multi-dex need not be enabled in the Android build system unless the patch
-        // dex itself requires it. The sizes of the source app and complete patched app are
-        // not important.
+        // DexPatcher multi-dex patching mode is automatically enabled if multi-dex is
+        // enabled in the Android build system. However, you can also enable multi-dex
+        // patching manually:
+        //multiDex = true
+        // Note that multi-dex need not be enabled in the Android build system unless the
+        // patch dex itself is large and requires it. The dex sizes of the source app and
+        // the patched app are not relevant.
 
         // In this test we also limit the number of methods per dex file in the patched app:
         maxDexPoolSize = 10000
@@ -52,12 +50,16 @@ android {
     defaultConfig {
         applicationId 'makeinfo.com.getid'
 
-        // DexPatcher multi-dex patched apps require an Android platform that provides native
-        // multi-dex support. This is implemented in ART, from Android 5.0 (API 21) onwards.
-        // Legacy multi-dex is not supported. The minSdkVersion must be increased if required. 
+        // Enable multi-dex support in the Android build system and DexPatcher:
+        multiDexEnabled true
+
+        // DexPatcher supports native multi-dex but does not support legacy multi-dex.
+        // Patched multi-dex apps require native multi-dex platform support, which was
+        // implemented in ART and included in Android 5.0 (API 21) and later versions.
+
+        // The 'minSdkVersion' should be set to 21 or higher in patched multi-dex apps:
         //minSdkVersion 9
         minSdkVersion 21
-
         targetSdkVersion 21
         versionCode 1
         versionName '1.0'

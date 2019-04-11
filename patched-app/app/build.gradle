@@ -74,10 +74,13 @@ dexpatcherConfig {
         // v1.2.0 and later, so this setting is no longer needed for normal operation.
         //apiLevel = 14
 
-        // Enable multi-dex support. Note that DexPatcher only supports native multi-dex as
-        // implemented in ART and does not support legacy multi-dex for Dalvik VM. Patched
-        // multi-dex apps are only compatible with Android 5.0 (API 21) and later devices.
+        // DexPatcher multi-dex patching mode is automatically enabled if multi-dex is
+        // enabled in the Android build system. However, you can also enable multi-dex
+        // patching manually:
         //multiDex = true
+        // Note that multi-dex need not be enabled in the Android build system unless the
+        // patch dex itself is large and requires it. The dex sizes of the source app and
+        // the patched app are not relevant.
 
         // Enable multi-threaded multi-dex processing, if multi-dex mode is already enabled.
         // Multi-threaded processing is faster but produces more dex files than the bare
