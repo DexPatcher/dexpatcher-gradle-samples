@@ -1,0 +1,84 @@
+apply plugin: 'com.github.lanchon.dexpatcher.patched-application'
+
+dexpatcherConfig {
+    //dir = '~/android/dexpatcher/dexpatcher-gradle-tools'
+
+    patchedApplication {
+        printAppInfo = true;
+
+        // Speed up debug builds by enabling multi-threaded multi-dex processing for them,
+        // but only if multi-dex mode is already enabled for them. Defaults to true.
+        //multiDexThreadedForMultiDexDebugBuilds = true
+
+        // Speed up debug builds by enabling multi-threaded multi-dex processing for them,
+        // even if multi-dex mode is not already enabled for them. Note that apps patched
+        // in multi-dex mode are only compatible with devices running Android 5.0 (API 21)
+        // and later. Defaults to false.
+        //multiDexThreadedForAllDebugBuilds = true
+    }
+
+    dexpatcher {
+        // MULTI-DEX TEST
+
+        // Note that DexPatcher multi-dex patched apps require an Android 5.0 device or
+        // newer to run. This is why the 'minSdkVersion' setting in the android section
+        // below was bumped to 21.
+
+        // In this test we patch a multi-dex source app created by artificially limiting
+        // the maximum number of method references per dex file. It was created using
+        // DexPatcher tool's '--max-dex-pool-size' option.
+
+        // Enable multi-dex in the 'patched-application' plugin:
+        multiDex = true
+        // Multi-dex need not be enabled in the Android build system unless the patch
+        // dex itself requires it. The sizes of the source app and complete patched app are
+        // not important.
+
+        // In this test we also limit the number of methods per dex file in the patched app:
+        maxDexPoolSize = 10000
+        // This forces it to become multi-dex for testing purposes.
+
+        // And finally we enable very verbose logging:
+        verbosity = DEBUG
+        logStats = true
+        // This will show multi-dex I/O in action.
+    }
+}
+
+android {
+    compileSdkVersion 21
+    //buildToolsVersion '28.0.3'
+
+    defaultConfig {
+        applicationId 'makeinfo.com.getid'
+
+        // DexPatcher multi-dex patched apps require an Android platform that provides native
+        // multi-dex support. This is implemented in ART, from Android 5.0 (API 21) onwards.
+        // Legacy multi-dex is not supported. The minSdkVersion must be increased if required. 
+        //minSdkVersion 9
+        minSdkVersion 21
+
+        targetSdkVersion 21
+        versionCode 1
+        versionName '1.0'
+    }
+
+    lintOptions {
+        disableLintTasks true
+        //checkReleaseBuilds false
+    }
+}
+
+dependencies {
+    implementation('ru.bartwell:exfilepicker:1.8') {
+        exclude module: 'support-v4'
+    }
+}
+
+void disableLintTasks(boolean disableTasks) {
+    if (disableTasks) {
+        tasks.withType(com.android.build.gradle.tasks.LintBaseTask).configureEach {
+            enabled = false
+        }
+    }
+}
