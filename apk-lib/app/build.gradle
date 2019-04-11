@@ -1,0 +1,60 @@
+apply plugin: 'com.github.lanchon.dexpatcher.patched-application'
+
+dependencies {
+    // The source application is defined as a Gradle dependency, which can contain
+    // either an Android APK or a DexPatcher APK library.
+
+    // In this case we use the APK library produced by the ':apklib' subproject:
+    sourceApkLibrary project(':apklib')
+
+    // Please note that in Android Studio you may need to invoke 'Build/Clean Project'
+    // to solve Gradle sync issues when using project dependencies.
+}
+
+dexpatcherConfig {
+    //dir = '~/android/dexpatcher/dexpatcher-gradle-tools'
+
+    patchedApplication {
+        printAppInfo = true;
+    }
+
+    dex2jar {
+    }
+
+    dexpatcher {
+        verbosity = VERBOSE
+    }
+}
+
+android {
+    compileSdkVersion 21
+    //buildToolsVersion '28.0.3'
+
+    defaultConfig {
+        applicationId 'makeinfo.com.getid'
+
+        minSdkVersion 9
+        targetSdkVersion 21
+        versionCode 1
+        versionName '1.0'
+    }
+
+    lintOptions {
+        disableLintTasks true
+        //checkReleaseBuilds false
+    }
+}
+
+dependencies {
+    implementation('ru.bartwell:exfilepicker:1.8') {
+        exclude module: 'support-v4'
+    }
+}
+
+void disableLintTasks(boolean disableTasks) {
+    if (disableTasks) {
+        tasks.withType(com.android.build.gradle.tasks.LintBaseTask).configureEach {
+            enabled = false
+        }
+    }
+}
