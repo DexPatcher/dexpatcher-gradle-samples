@@ -1,26 +1,17 @@
 task build {
-    dependsOn gradle.includedBuild('patched-app').task(':patched:build')
-    dependsOn gradle.includedBuild('patch-lib').task(':patched:build')
-    dependsOn gradle.includedBuild('multi-dex').task(':patched:build')
-    dependsOn gradle.includedBuild('patched-dex').task(':build')
+    dependsOn gradle.includedBuild('patched-app').task(':app:build')
+    dependsOn gradle.includedBuild('multi-dex').task(':app:build')
+    //dependsOn gradle.includedBuild('apk-lib').task(':app:build')
+    //dependsOn gradle.includedBuild('patch-lib').task(':app:build')
+    //dependsOn gradle.includedBuild('patched-dex').task(':build')
 }
-
 
 task clean {
-    dependsOn gradle.includedBuild('patched-app').task(':source:clean')
-    dependsOn gradle.includedBuild('patched-app').task(':patched:clean')
-    dependsOn gradle.includedBuild('patch-lib').task(':source:clean')
-    dependsOn gradle.includedBuild('patch-lib').task(':patch:clean')
-    dependsOn gradle.includedBuild('patch-lib').task(':patched:clean')
-    dependsOn gradle.includedBuild('multi-dex').task(':source:clean')
-    dependsOn gradle.includedBuild('multi-dex').task(':patched:clean')
-    dependsOn gradle.includedBuild('patched-dex').task(':clean')
-}
-
-
-task cleanAll {
-    dependsOn gradle.includedBuild('patched-app').task(':source:cleanAll')
-    dependsOn gradle.includedBuild('patch-lib').task(':source:cleanAll')
-    dependsOn gradle.includedBuild('multi-dex').task(':source:cleanAll')
-    dependsOn gradle.includedBuild('patched-dex').task(':clean')
+    dependsOn gradle.includedBuild('patched-app').task(':app:clean')
+    dependsOn gradle.includedBuild('multi-dex').task(':app:clean')
+    //dependsOn gradle.includedBuild('apk-lib').task(':apklib:build')
+    //dependsOn gradle.includedBuild('apk-lib').task(':app:build')
+    //dependsOn gradle.includedBuild('patch-lib').task(':patch:clean')
+    //dependsOn gradle.includedBuild('patch-lib').task(':app:clean')
+    //dependsOn gradle.includedBuild('patched-dex').task(':clean')
 }
