@@ -2,69 +2,64 @@
 
 apply plugin: 'com.github.lanchon.dexpatcher.patch-library'
 
-// The DexPatcher Patch Library plugin produces a DexPatcher patch library file that
-// bundles compiled changes and additions to code and resources of a source application
-// imported as a DexPatcher APK library, without bundling any part of the source
-// application itself.
+// The DexPatcher Patch Library plugin produces a DexPatcher patch library that bundles
+// compiled changes to code, manifest and resources of a source application without
+// bundling any part of the application itself. The changes bundled in a patch library
+// are applied to its source application using the DexPatcher Patched Application plugin.
+
+dependencies {
+    sourceApk fileTree(dir: '../apk', include: ['*.apk', '*.jar', '*.zip'])
+}
 
 // General Plugin Configuration
 dexpatcherConfig {
-    // This should point to a local clone of the DexPatcher Gradle plugin support tool
-    // repo that is available here: https://github.com/Lanchon/DexPatcher-gradle-tools
-    // But instead of defining the directory here, add a 'dexpatcher.dir' entry to the
-    // 'local.properties' of the root project. That way it becomes available to all
-    // subprojects and the local configuration is not posted to the VCS.
     //dir = '~/android/dexpatcher/dexpatcher-gradle-tools'
 
-    // Specific Plugin Configuration
+    // Plugin-Specific Configuration
     patchLibrary {
+        // Displays package and version information of the source app on every build.
+        // Note that this info can also be queried by invoking the 'sourceAppInfo' task.
+        // Defaults to false.
+        printAppInfo = true;
+
         // Enable import of Java symbols from the source app. Defaults to true.
         //importSymbols = true;
+    }
+
+    apktool {
+    }
+
+    dex2jar {
     }
 }
 
 android {
     compileSdkVersion 21
-    buildToolsVersion '23.0.3'
+    //buildToolsVersion '28.0.3'
 
     defaultConfig {
-        // You must set these fields to match or be compatible with the corresponding data
-        // of the source app. (Data is displayed when the source apk library is built.)
         minSdkVersion 9
         targetSdkVersion 21
         versionCode 1
         versionName '1.0'
     }
 
-    buildTypes {
-        release {
-            minifyEnabled false
-        }
+    lintOptions {
+        disableLintTasks true
+        //checkReleaseBuilds false
     }
 }
 
-tasks.withType(com.android.build.gradle.tasks.Lint) {
-    enabled = false
+dependencies {
+    implementation('ru.bartwell:exfilepicker:1.8') {
+        exclude module: 'support-v4'
+    }
 }
 
-dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-
-    // To produce a patched application we need to import an apk library created from the
-    // app we want to modify. In this case we import the artifact produced by the 'source'
-    // subproject. But the library could be produced by an independent project and imported
-    // manually in Android Studio just like any other android library (aar) file.
-    compile project(':source')
-
-    // We import an Android library, a file chooser, just for fun. This pulls in all its
-    // resources that will be transparently merged, like other resources from this project,
-    // with those of the source app. Each component will have its own independent 'R' class.
-    // The numeric IDs of the resources coming from the source app will be kept constant.
-    compile('ru.bartwell:exfilepicker:1.8') {
-        // But the imported library has a transitive dependency on a module that is already
-        // present in the source app. So we exclude it from the import, keeping the source
-        // app's version. Alternatively we could delete the copy brought in by the source
-        // app using DexPatcher package annotations.
-        exclude module: 'support-v4'
+void disableLintTasks(boolean disableTasks) {
+    if (disableTasks) {
+        tasks.withType(com.android.build.gradle.tasks.LintBaseTask).configureEach {
+            enabled = false
+        }
     }
 }

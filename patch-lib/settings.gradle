@@ -1,1 +1,2 @@
-include ':source', ':patch', ':patched'
+include ':app'
+include ':patch'

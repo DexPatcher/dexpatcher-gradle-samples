@@ -1,0 +1,7 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="hack.getid"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!--Source and patched manifests are merged according to standard build rules:
+        http://tools.android.com/tech-docs/new-build-system/user-guide/manifest-merger -->
+
+</manifest>
