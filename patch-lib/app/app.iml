@@ -118,5 +118,6 @@
     <orderEntry type="library" name="Gradle: __local_aars__:/home/rod/android/dexpatcher/dexpatcher-gradle-samples/patch-lib/app/build/intermediates/dexpatcher/component-library/app-components.aar:unspecified@jar" level="project" />
     <orderEntry type="library" name="Gradle: __local_aars__:/home/rod/android/dexpatcher/dexpatcher-gradle-tools-dev/libs/provided/dexpatcher-annotation/dexpatcher-annotation-1.6.2.jar:unspecified@jar" level="project" />
     <orderEntry type="module" module-name="patch" />
+    <orderEntry type="module" module-name="patch" />
   </component>
 </module>
