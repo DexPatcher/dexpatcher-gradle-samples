@@ -8,7 +8,11 @@ apply plugin: 'com.github.lanchon.dexpatcher.patch-library'
 // are applied to its source application using the DexPatcher Patched Application plugin.
 
 dependencies {
-    sourceApk fileTree(dir: '../apk', include: ['*.apk', '*.jar', '*.zip'])
+    // We use the APK library produced by the ':apklib' subproject:
+    sourceApkLibrary project(':apklib')
+
+    // Please note that in Android Studio you may need to invoke 'Build/Clean Project'
+    // to solve Gradle sync issues when using project dependencies.
 }
 
 // General Plugin Configuration
@@ -24,9 +28,6 @@ dexpatcherConfig {
 
         // Enable import of Java symbols from the source app. Defaults to true.
         //importSymbols = true;
-    }
-
-    apktool {
     }
 
     dex2jar {

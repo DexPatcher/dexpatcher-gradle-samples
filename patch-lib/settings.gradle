@@ -1,2 +1,3 @@
+include ':apklib'
 include ':patch'
 include ':app'

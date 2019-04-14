@@ -1,7 +1,11 @@
 apply plugin: 'com.github.lanchon.dexpatcher.patched-application'
 
 dependencies {
-    sourceApk fileTree(dir: '../apk', include: ['*.apk', '*.jar', '*.zip'])
+    // We use the APK library produced by the ':apklib' subproject:
+    sourceApkLibrary project(':apklib')
+
+    // Please note that in Android Studio you may need to invoke 'Build/Clean Project'
+    // to solve Gradle sync issues when using project dependencies.
 }
 
 dexpatcherConfig {
@@ -11,9 +15,6 @@ dexpatcherConfig {
     patchedApplication {
         printAppInfo = true;
         importSymbols = false;
-    }
-
-    apktool {
     }
 
     dexpatcher {

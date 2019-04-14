@@ -1,0 +1,38 @@
+// DexPatcher APK Library plugin:
+
+apply plugin: 'com.github.lanchon.dexpatcher.apk-library'
+
+// The DexPatcher APK Library plugin processes a source application provided as an
+// Android APK and produces a DexPatcher APK library. The library is used to create
+// modified versions of the source application and includes its Dalvik bytecode and
+// decoded manifest and resources.
+
+dependencies {
+    // The source application is defined as a Gradle dependency.
+
+    // It is defined either as an Android APK dependency:
+    //sourceApk fileTree(dir: 'apk', include: ['*.apk', '*.jar', '*.zip'])
+
+    // Or as a DexPatcher APK library dependency:
+    //sourceApkLibrary fileTree(dir: 'apklib', include: ['*.apklib'])
+
+    // The contents of the 'apk' and 'apklib' project subdirectories are included in
+    // these configurations by default. Exactly one source application dependency
+    // must be available to the build.
+}
+
+// General Plugin Configuration
+dexpatcherConfig {
+    //dir = '~/android/dexpatcher/dexpatcher-gradle-tools'
+
+    // Plugin-Specific Configuration
+    apkLibrary {
+        // Displays package and version information of the source app on every build.
+        // Note that this info can also be queried by invoking the 'sourceAppInfo' task.
+        // Defaults to false.
+        //printAppInfo = false;
+    }
+
+    apktool {
+    }
+}
