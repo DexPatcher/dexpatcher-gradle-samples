@@ -4,6 +4,6 @@
         http://tools.android.com/tech-docs/new-build-system/resource-merging -->
 
     <!--Override app name.-->
-    <string name="app_name">Get ID (patched-app)</string>
+    <string name="app_name">Get ID (apk-lib)</string>
 
 </resources>
