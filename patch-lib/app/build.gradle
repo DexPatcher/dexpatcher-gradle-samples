@@ -40,6 +40,9 @@ android {
     }
 }
 
+// Please note that in Android Studio you may need to invoke 'Build/Clean Project'
+// to solve Gradle sync issues when using project dependencies.
+
 // Android Gradle plugin 3.3.2 has a bug that causes Android libraries to be imported in the
 // wrong order if some libraries are provided as project dependencies and others as local files.
 // This causes manifest and resource merging conflict resolution issues. The following code works
