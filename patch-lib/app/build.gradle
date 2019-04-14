@@ -16,9 +16,6 @@ dexpatcherConfig {
     apktool {
     }
 
-    dex2jar {
-    }
-
     dexpatcher {
         verbosity = VERBOSE
     }
