@@ -40,9 +40,31 @@ android {
     }
 }
 
-dependencies {
-    // Bring in the patch and its dependencies.
-    implementation project(':patch')
+// Android Gradle plugin 3.3.2 has a bug that causes Android libraries to be imported in the
+// wrong order if some libraries are provided as project dependencies and others as local files.
+// This causes manifest and resource merging conflict resolution issues. The following code works
+// around this bug by presenting the required project dependency as a file dependency.
+// (See: https://issuetracker.google.com/issues/130463010)
+def aarOrderBugWorkaround = true
+if (aarOrderBugWorkaround) {
+    // For each build type, get the project dependency from the corresponding builder task.
+    android.buildTypes.all {
+        def bundleAar = tasks.getByPath(":patch:bundle${com.android.utils.StringHelper.capitalize(it.name)}Aar")
+        dependencies.add "${it.name}Implementation", files(bundleAar.archivePath) {
+            builtBy bundleAar
+        }
+    }
+    // Then manually bring in the transitive dependencies of the project dependency.
+    dependencies {
+        implementation('ru.bartwell:exfilepicker:1.8') {
+            exclude module: 'support-v4'
+        }
+    }
+} else {
+    dependencies {
+        // Bring in the patch project and its dependencies.
+        implementation project(':patch')
+    }
 }
 
 void disableLintTasks(boolean disableTasks) {
