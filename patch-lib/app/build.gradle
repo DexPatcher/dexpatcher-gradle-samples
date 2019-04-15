@@ -51,8 +51,8 @@ android {
 // (See: https://issuetracker.google.com/issues/130463010)
 def aarOrderBugWorkaround = true
 if (aarOrderBugWorkaround) {
-    // For each build type, get the project dependency from the corresponding builder task.
-    android.buildTypes.all {
+    // For each variant, get the project dependency from the corresponding builder task.
+    android.applicationVariants.all {
         def bundleAar = tasks.getByPath(":patch:bundle${com.android.utils.StringHelper.capitalize(it.name)}Aar")
         dependencies.add "${it.name}Implementation", files(bundleAar.archivePath) {
             builtBy bundleAar
