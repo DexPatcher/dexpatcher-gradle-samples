@@ -19,7 +19,7 @@ buildscript {
     }
     dependencies {
         // DexPatcher Gradle plugins:
-        classpath 'com.github.lanchon.dexpatcher:dexpatcher-gradle:2.0.0-alpha2'
+        classpath 'com.github.lanchon.dexpatcher:dexpatcher-gradle:2.0.0-alpha3'
     }
 }
 
