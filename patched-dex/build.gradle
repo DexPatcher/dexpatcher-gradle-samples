@@ -12,8 +12,7 @@
 
 buildscript {
     repositories {
-        // Gradle plugin repo:
-        maven { url 'https://plugins.gradle.org/m2/' }
+        gradlePluginPortal()
         // This is the local repo I use for plugin development, you should remove it:
         flatDir dirs: '../../dexpatcher-gradle/build/libs'
     }
