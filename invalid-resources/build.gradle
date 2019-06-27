@@ -1,0 +1,33 @@
+buildscript {
+    repositories {
+        google()
+        jcenter()
+    }
+    dependencies {
+        // Android Gradle plugins:
+        classpath 'com.android.tools.build:gradle:3.3.2'
+    }
+}
+
+buildscript {
+    repositories {
+        gradlePluginPortal()
+        // This is the local repo I use for plugin development, you should remove it:
+        flatDir dirs: '../../dexpatcher-gradle/build/libs'
+    }
+    dependencies {
+        // DexPatcher Gradle plugins:
+        classpath 'com.github.lanchon.dexpatcher:dexpatcher-gradle:2.0.0-alpha4'
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
