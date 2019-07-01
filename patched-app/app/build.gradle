@@ -52,6 +52,9 @@ dexpatcherConfig {
         //apiLevel = 14
         //keepBrokenResources = true
         //stripDebugInfo = true
+
+        //extraArgs.addAll ...
+        //classpath.setFrom project.files(...)
     }
 
     // Dex2jar Task Defaults
@@ -60,6 +63,9 @@ dexpatcherConfig {
         //translateDebugInfo = true
         //optimizeSynchronized = true
         //reuseRegisters = true
+
+        //extraArgs.addAll ...
+        //classpath.setFrom project.files(...)
     }
 
     // DexPatcher Task Defaults
@@ -113,6 +119,10 @@ dexpatcherConfig {
 
         // Enable logging of timing statistics.
         //logStats = true
+
+        //extraArgs.addAll ...
+        //classpath.setFrom project.files(...)
+        //annotationClasspath.setFrom project.files(...)
     }
 }
 
