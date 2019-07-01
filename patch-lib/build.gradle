@@ -28,6 +28,34 @@ allprojects {
     }
 }
 
+allprojects {
+    repositories {
+        // DexPatcher repo (https://dexpatcher.github.io/dexpatcher-repo/)
+        maven { url 'https://dexpatcher.github.io/dexpatcher-repo/m2' }
+        // This is the local repo I use for tool development, you should remove it:
+        flatDir dirs: rootProject.file('../../dexpatcher-tool/tool/build/libs')
+    }
+    dependencies {
+        configurations.all {
+            switch (name) {
+                case 'apktool':
+                    add name, 'dexpatcher-repo.ibotpeaches.apktool:apktool:2.4.0'
+                    break
+                case 'dex2jar':
+                    add name, 'dexpatcher-repo.dexpatcher.dex2jar:dex-tools:2.1-20171001-lanchon@zip'
+                    break
+                case 'dexpatcher':
+                    add name, 'dexpatcher-repo.dexpatcher.dexpatcher-tool:dexpatcher:1.6.2'
+                    break
+                case 'dexpatcherAnnotation':
+                    // By default the annotation package bundled within DexPatcher tool is used.
+                    //add name, 'dexpatcher-repo.dexpatcher.dexpatcher-tool:dexpatcher-annotation:?'
+                    break
+            }
+        }
+    }
+}
+
 task clean(type: Delete) {
     delete rootProject.buildDir
 }

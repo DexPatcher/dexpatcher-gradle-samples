@@ -9,8 +9,6 @@ dependencies {
 }
 
 dexpatcherConfig {
-    //dir = '~/android/dexpatcher/dexpatcher-gradle-tools'
-
     // Plugin-Specific Configuration
     patchedApplication {
         printAppInfo = true;

@@ -17,8 +17,6 @@ dependencies {
 
 // General Plugin Configuration
 dexpatcherConfig {
-    //dir = '~/android/dexpatcher/dexpatcher-gradle-tools'
-
     // Plugin-Specific Configuration
     patchLibrary {
         // Displays package and version information of the source app on every build.

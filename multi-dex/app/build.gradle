@@ -1,8 +1,6 @@
 apply plugin: 'com.github.lanchon.dexpatcher.patched-application'
 
 dexpatcherConfig {
-    //dir = '~/android/dexpatcher/dexpatcher-gradle-tools'
-
     patchedApplication {
         printAppInfo = true;
 

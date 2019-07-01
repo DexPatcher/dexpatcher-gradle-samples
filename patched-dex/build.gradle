@@ -36,10 +36,37 @@ plugins {
 
 // The DexPatcher Base plugin provides basic DexPatcher, Apktool and dex2jar tasks.
 
+allprojects {
+    repositories {
+        // DexPatcher repo (https://dexpatcher.github.io/dexpatcher-repo/)
+        maven { url 'https://dexpatcher.github.io/dexpatcher-repo/m2' }
+        // This is the local repo I use for tool development, you should remove it:
+        flatDir dirs: rootProject.file('../../dexpatcher-tool/tool/build/libs')
+    }
+    dependencies {
+        configurations.all {
+            switch (name) {
+                case 'apktool':
+                    add name, 'dexpatcher-repo.ibotpeaches.apktool:apktool:2.4.0'
+                    break
+                case 'dex2jar':
+                    add name, 'dexpatcher-repo.dexpatcher.dex2jar:dex-tools:2.1-20171001-lanchon@zip'
+                    break
+                case 'dexpatcher':
+                    add name, 'dexpatcher-repo.dexpatcher.dexpatcher-tool:dexpatcher:1.6.2'
+                    break
+                case 'dexpatcherAnnotation':
+                    // By default the annotation package bundled within DexPatcher tool is used.
+                    //add name, 'dexpatcher-repo.dexpatcher.dexpatcher-tool:dexpatcher-annotation:?'
+                    break
+            }
+        }
+    }
+}
+
 import java.util.zip.ZipException
 import java.util.zip.ZipFile
 
-import lanchon.dexpatcher.gradle.Utils
 import lanchon.dexpatcher.gradle.tasks.Dex2jarTask;
 import lanchon.dexpatcher.gradle.tasks.DexpatcherTask;
 
@@ -86,19 +113,17 @@ Directory androidSdkDir = null
 
 //String home = System.properties['user.home']
 //androidSdkDir = layout.projectDirectory.dir("$home/android/sdk")
-//dexpatcherConfig.dir = layout.projectDirectory.dir("$home/android/dexpatcher/dexpatcher-gradle-tools")
 
 // Setup Tools
 
-if (!androidSdkDir) androidSdkDir = dexpatcherConfig.properties.getAsDirectory('sdk.dir')
+if (!androidSdkDir) androidSdkDir = layout.projectDirectory.dir(dexpatcherConfig.properties.get('sdk.dir'))
 
 dexpatcherConfig.dexpatcher.multiDex = multiDex
 boolean dxMultiDex = multiDex
 
 // Import DexPatcher annotations
 
-def providedLibs = Utils.getJars(project, dexpatcherConfig.resolvedProvidedLibDir)
-project.dependencies.add JavaPlugin.COMPILE_ONLY_CONFIGURATION_NAME, providedLibs
+project.dependencies.add JavaPlugin.COMPILE_ONLY_CONFIGURATION_NAME, dexpatcherConfig.dexpatcher.annotationClasspath
 
 // Import Android API
 
@@ -159,7 +184,7 @@ assemble.dependsOn dx
 
 // Apply Patch
 
-def patchedDexDir = Utils.getFile(project.buildDir, 'patched-dex')
+def patchedDexDir = layout.buildDirectory.get().dir('patched-dex')
 
 task dexpatcher(type: DexpatcherTask) {
     description = "Patches the source dex using the just-built patch dex."

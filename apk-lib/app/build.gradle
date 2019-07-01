@@ -12,8 +12,6 @@ dependencies {
 }
 
 dexpatcherConfig {
-    //dir = '~/android/dexpatcher/dexpatcher-gradle-tools'
-
     patchedApplication {
         printAppInfo = true;
     }

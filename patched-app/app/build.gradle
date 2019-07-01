@@ -22,13 +22,6 @@ dependencies {
 
 // General Plugin Configuration
 dexpatcherConfig {
-    // This should point to a local clone of the DexPatcher Gradle plugin support tool
-    // repo that is available here: https://github.com/Lanchon/DexPatcher-gradle-tools
-    // But instead of defining the directory here, add a 'dexpatcher.dir' entry to the
-    // 'local.properties' of the root project. That way it becomes available to all
-    // subprojects and the local configuration is not posted to the VCS.
-    //dir = '~/android/dexpatcher/dexpatcher-gradle-tools'
-
     // Plugin-Specific Configuration
     patchedApplication {
         // Displays package and version information of the source app on every build.
