@@ -8,16 +8,17 @@ apply plugin: 'com.github.lanchon.dexpatcher.patch-library'
 // are applied to its source application using the DexPatcher Patched Application plugin.
 
 dependencies {
-    // We use the APK library produced by the ':apklib' subproject:
+    // The source application is defined as a Gradle dependency, which can contain
+    // either an Android APK or a DexPatcher APK library.
+
+    // In this case we use the APK library produced by the ':apklib' subproject:
     sourceApkLibrary project(':apklib')
 
     // Please note that in Android Studio you may need to invoke 'Build/Clean Project'
     // to solve Gradle sync issues when using project dependencies.
 }
 
-// General Plugin Configuration
 dexpatcherConfig {
-    // Plugin-Specific Configuration
     patchLibrary {
         // Displays package and version information of the source app on every build.
         // Note that this info can also be queried by invoking the 'sourceAppInfo' task.

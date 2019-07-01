@@ -1,7 +1,10 @@
 apply plugin: 'com.github.lanchon.dexpatcher.patched-application'
 
 dependencies {
-    // We use the APK library produced by the ':apklib' subproject:
+    // The source application is defined as a Gradle dependency, which can contain
+    // either an Android APK or a DexPatcher APK library.
+
+    // In this case we use the APK library produced by the ':apklib' subproject:
     sourceApkLibrary project(':apklib')
 
     // Please note that in Android Studio you may need to invoke 'Build/Clean Project'
@@ -9,7 +12,6 @@ dependencies {
 }
 
 dexpatcherConfig {
-    // Plugin-Specific Configuration
     patchedApplication {
         printAppInfo = true;
         importSymbols = false;
