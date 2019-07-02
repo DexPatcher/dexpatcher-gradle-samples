@@ -41,6 +41,8 @@ dexpatcherConfig {
         // in multi-dex mode are only compatible with devices running Android 5.0 (API 21)
         // and later. Defaults to false.
         //multiDexThreadedForAllDebugBuilds = true
+
+        //dexpatcherAnnotationClasspath.setFrom project.files(...)
     }
 
     // Apktool Task Defaults
@@ -53,8 +55,8 @@ dexpatcherConfig {
         //keepBrokenResources = true
         //stripDebugInfo = true
 
-        //extraArgs.addAll ...
         //classpath.setFrom project.files(...)
+        //extraArgs.addAll ...
     }
 
     // Dex2jar Task Defaults
@@ -64,8 +66,8 @@ dexpatcherConfig {
         //optimizeSynchronized = true
         //reuseRegisters = true
 
-        //extraArgs.addAll ...
         //classpath.setFrom project.files(...)
+        //extraArgs.addAll ...
     }
 
     // DexPatcher Task Defaults
@@ -120,9 +122,8 @@ dexpatcherConfig {
         // Enable logging of timing statistics.
         //logStats = true
 
-        //extraArgs.addAll ...
         //classpath.setFrom project.files(...)
-        //annotationClasspath.setFrom project.files(...)
+        //extraArgs.addAll ...
     }
 }
 

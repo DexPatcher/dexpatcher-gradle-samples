@@ -55,10 +55,6 @@ allprojects {
                 case 'dexpatcher':
                     add name, 'dexpatcher-repo.dexpatcher.dexpatcher-tool:dexpatcher:1.6.2'
                     break
-                case 'dexpatcherAnnotation':
-                    // By default the annotation package bundled within DexPatcher tool is used.
-                    //add name, 'dexpatcher-repo.dexpatcher.dexpatcher-tool:dexpatcher-annotation:?'
-                    break
             }
         }
     }
@@ -123,7 +119,8 @@ boolean dxMultiDex = multiDex
 
 // Import DexPatcher annotations
 
-project.dependencies.add JavaPlugin.COMPILE_ONLY_CONFIGURATION_NAME, dexpatcherConfig.dexpatcher.annotationClasspath
+def annotationFile = dexpatcherConfig.dexpatcher.bundledAnnotationFile
+project.dependencies.add JavaPlugin.COMPILE_ONLY_CONFIGURATION_NAME, project.files(annotationFile)
 
 // Import Android API
 
