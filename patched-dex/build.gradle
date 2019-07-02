@@ -34,7 +34,7 @@ plugins {
 }
 */
 
-// The DexPatcher Base plugin provides basic DexPatcher, Apktool and Dex2jar tasks.
+// The DexPatcher Base plugin provides basic DexPatcher, Apktool and dex2jar tasks.
 
 allprojects {
     repositories {
