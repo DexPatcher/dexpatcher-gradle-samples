@@ -1,5 +1,7 @@
 package makeinfo.com.getid;
 
+import hack.getid.patch.R;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -66,9 +68,9 @@ public class MainActivity extends ActionBarActivity {
         // -> https://github.com/bartwell/ExFilePicker
         // Let's make the 'Rate' option menu item open the file chooser.
         int id = item.getItemId();
-        // Note that our dynamically generated 'R' class (hack.getid.R) includes
-        // the imported resources from the source app.
-        if (id == R.id.rate) {
+        // Note that our dynamically generated 'R' class (hack.getid.patch.R) does
+        // not include the imported resources from the source app.
+        if (id == makeinfo.com.getid.R.id.rate) {
             startActivity(new Intent(getApplicationContext(), ExFilePickerActivity.class));
             return true;
         }
