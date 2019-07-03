@@ -1,0 +1,16 @@
+#!/bin/bash
+
+set -e
+
+do_diff() {
+    echo "##########  $1"
+    grep '<string name="app_name"' $1/src/main/res/values/strings.xml
+    diff -r -C0 patched-app/app/src/main/java $1/src/main/java || true
+    echo
+}
+
+do_diff patched-app/app
+do_diff multi-dex/app
+do_diff apk-lib/app
+do_diff patch-lib/patch
+do_diff invalid-resources/app
