@@ -106,9 +106,6 @@ dexpatcherConfig {
         // Enable implicit ignore of trivial default constructors. Defaults to true.
         //constructorAutoIgnore = true
 
-        // Enable compatibility with the deprecated DexTag.
-        //compatDexTag = true
-
         // The verbosity of the DexPatcher tool. One of QUIET, NORMAL, VERBOSE or DEBUG.
         // Defaults to NORMAL, but VERBOSE is recommended.
         verbosity = VERBOSE

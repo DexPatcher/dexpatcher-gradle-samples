@@ -98,7 +98,6 @@ dexpatcherConfig.dexpatcher {
     //maxDexPoolSize = 65536
     //annotationPackage = 'lanchon.dexpatcher.annotation'
     //constructorAutoIgnore = true
-    //compatDexTag = true
     verbosity = VERBOSE
     //logSourcePath = true
     //logSourcePathRoot = file('src/main/java')
