@@ -48,7 +48,7 @@ dexpatcherConfig {
     // Apktool Task Defaults
     apktool {
         // Use a framework provided in a project subdirectory:
-        //frameworkDir = layout.projectDirectory.dir('framework')
+        //frameworkInDir = layout.projectDirectory.dir('framework')
         //frameworkTag = 'tag'
 
         //apiLevel = 14
