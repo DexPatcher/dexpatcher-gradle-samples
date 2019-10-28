@@ -53,7 +53,7 @@ allprojects {
                     add name, 'dexpatcher-repo.dexpatcher.dex2jar:dex-tools:2.1-20171001-lanchon@zip'
                     break
                 case 'dexpatcher':
-                    add name, 'dexpatcher-repo.dexpatcher.dexpatcher-tool:dexpatcher:1.6.3'
+                    add name, 'dexpatcher-repo.dexpatcher.dexpatcher-tool:dexpatcher:1.7.0'
                     break
             }
         }
