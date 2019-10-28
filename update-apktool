@@ -1,0 +1,11 @@
+#!/bin/bash
+
+set -e
+shopt -s extglob
+
+version="$1"
+
+[[ "$version" == "" ]] && echo "error: new version not specified" >&2 && exit 1
+
+sed -i 's/dexpatcher-repo\.ibotpeaches\.apktool\:apktool\:[^'"'"'"]*/dexpatcher-repo\.ibotpeaches\.apktool\:apktool\:'"$version"'/g' \
+        !(makeinfo.com.getid)/build.gradle
