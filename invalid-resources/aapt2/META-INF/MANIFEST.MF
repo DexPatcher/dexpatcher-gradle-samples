@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Apktool-Artifact: aapt2
+Apktool-Version: 2.4.0
+Created-By: dexpatcher-repo-updater
+
