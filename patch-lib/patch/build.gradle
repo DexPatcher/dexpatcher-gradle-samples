@@ -28,6 +28,16 @@ dexpatcherConfig {
         // Enable import of Java symbols from the source app. Defaults to true.
         //importSymbols = true;
 
+        // Disable detection of invalid resources and attempt to process them normally.
+        // Defaults to false.
+        //disableResourceValidation = true
+
+        // Build the patched app using a custom AAPT2 binary bundled with the version of
+        // Apktool currently in use. These AAPT2 binaries are modified to allow rebuilding
+        // of slightly out-of-spec apps, such as apps that contain invalid resources.
+        // Defaults to false.
+        //useAapt2BundledWithApktool = true
+
         //dexpatcherAnnotationClasspath.setFrom project.files(...)
     }
 
