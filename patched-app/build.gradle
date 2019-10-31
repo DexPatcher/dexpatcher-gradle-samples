@@ -51,6 +51,13 @@ allprojects {
                     // By default the annotation package bundled within DexPatcher tool is used.
                     //add name, 'dexpatcher-repo.dexpatcher.dexpatcher-tool:dexpatcher-annotation:?'
                     break
+                case 'aapt2':
+                    // By default the AAPT2 binary provided by the Android Gradle plugin is used
+                    // (unless 'useAapt2BundledWithApktool' is set to true in the build script).
+                    //add name, 'dexpatcher-repo.ibotpeaches.apktool:apktool-aapt2:?'
+                    //add name, 'com.android.tools.build:aapt2:?:linux|windows|osx'
+                    //add name, rootProject.files('aapt2/linux|windows|macosx/aapt2[.exe]')
+                    break
             }
         }
     }
