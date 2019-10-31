@@ -1,28 +1,3 @@
-//////////////  INVALID RESOURCE WORKAROUND  //////////////
-
-// This code section plus the contents of this project's 'aapt2' directory make the Android
-// build system tolerant of some types of invalid resources, such as file-based resources
-// that have invalid names. This is a temporary workaround; a better solution is planned.
-
-// Note that this code section must execute before the DexPatcher plugin is applied.
-
-import com.android.SdkConstants
-
-static def getPlatformDir() {
-    switch (SdkConstants.CURRENT_PLATFORM) {
-        case SdkConstants.PLATFORM_LINUX: return 'linux'
-        case SdkConstants.PLATFORM_DARWIN: return 'macosx'
-        case SdkConstants.PLATFORM_WINDOWS: return 'windows'
-        default: throw new RuntimeException('Unsupported platform')
-    }
-}
-
-project.ext['android.disableResourceValidation'] = 'true'
-project.ext['android.aapt2FromMavenOverride'] = "aapt2/$platformDir/$SdkConstants.FN_AAPT2"
-
-///////////////////////////////////////////////////////////
-
-
 apply plugin: 'com.github.lanchon.dexpatcher.patched-application'
 
 dexpatcherConfig {
