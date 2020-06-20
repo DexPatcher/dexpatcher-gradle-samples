@@ -5,7 +5,7 @@ buildscript {
     }
     dependencies {
         // Android Gradle plugins:
-        classpath 'com.android.tools.build:gradle:3.4.2'
+        classpath 'com.android.tools.build:gradle:3.5.3'
     }
 }
 
@@ -17,7 +17,7 @@ buildscript {
     }
     dependencies {
         // DexPatcher Gradle plugins:
-        classpath 'com.github.lanchon.dexpatcher:dexpatcher-gradle:2.1.0'
+        classpath 'com.github.lanchon.dexpatcher:dexpatcher-gradle:2.1.1'
     }
 }
 
@@ -45,7 +45,7 @@ allprojects {
                     add name, 'dexpatcher-repo.dexpatcher.dex2jar:dex-tools:2.1-20171001-lanchon@zip'
                     break
                 case 'dexpatcher':
-                    add name, 'dexpatcher-repo.dexpatcher.dexpatcher-tool:dexpatcher:1.7.0'
+                    add name, 'dexpatcher-repo.dexpatcher.dexpatcher-tool:dexpatcher:1.8.0-beta1'
                     break
                 case 'dexpatcherAnnotation':
                     // By default the annotation package bundled within DexPatcher tool is used.
