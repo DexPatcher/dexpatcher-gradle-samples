@@ -70,8 +70,11 @@ dependencies {
 
 void disableLintTasks(boolean disableTasks) {
     if (disableTasks) {
-        tasks.withType(com.android.build.gradle.tasks.LintBaseTask).configureEach {
-            enabled = false
+        afterEvaluate() {
+            tasks.withType(com.android.build.gradle.tasks.LintBaseTask).configureEach {
+                enabled = false
+                allInputs.setFrom()
+            }
         }
     }
 }
