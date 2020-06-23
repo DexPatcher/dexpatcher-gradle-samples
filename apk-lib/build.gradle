@@ -39,7 +39,7 @@ allprojects {
         configurations.all {
             switch (name) {
                 case 'apktool':
-                    add name, 'dexpatcher-repo.ibotpeaches.apktool:apktool:2.4.0'
+                    add name, 'dexpatcher-repo.ibotpeaches.apktool:apktool:2.4.1'
                     break
                 case 'dex2jar':
                     add name, 'dexpatcher-repo.dexpatcher.dex2jar:dex-tools:2.1-20171001-lanchon@zip'
