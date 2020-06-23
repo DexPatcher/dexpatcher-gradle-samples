@@ -4,4 +4,20 @@
     <!--Source and patched manifests are merged according to standard build rules:
         http://tools.android.com/tech-docs/new-build-system/user-guide/manifest-merger -->
 
+    <!--We let the application tag inherit its attributes from the source app.-->
+    <application>
+
+        <!--As a convenience, due to this bug in Android Studio:
+            https://code.google.com/p/android/issues/detail?id=168306
+            We surface part of the default activity to the main manifest
+            so that Studio will not complain when launching the app.-->
+        <activity android:name="makeinfo.com.getid.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+    </application>
+
 </manifest>
